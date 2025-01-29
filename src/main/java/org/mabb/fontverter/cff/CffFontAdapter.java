@@ -14,9 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.cff;
-
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -36,6 +34,7 @@ import java.lang.reflect.Field;
 import java.util.*;
 
 public class CffFontAdapter implements FVFont {
+
     private byte[] data = new byte[]{};
     private CFFFont font;
     private static final Log LOG = LogFactory.getLog(CffFontAdapter.class);
@@ -49,9 +48,12 @@ public class CffFontAdapter implements FVFont {
 
     private static CFFFont fontboxParse(byte[] cffData) throws IOException {
         CFFParser parser = new CFFParser();
-        List<CFFFont> fonts = parser.parse(cffData);
-        if (fonts.size() > 1)
+        byte[] newData = new byte[cffData.length];
+        System.arraycopy(newData, 0, cffData, 0, cffData.length);
+        List<CFFFont> fonts = parser.parse(cffData, () -> newData);
+        if (fonts.size() > 1) {
             throw new FontNotSupportedException("Multiple CFF fonts in one file are not supported.");
+        }
         return fonts.get(0);
     }
 
@@ -78,20 +80,24 @@ public class CffFontAdapter implements FVFont {
     }
 
     public FontConverter createConverterForType(FontVerter.FontFormat fontFormat) throws FontNotSupportedException {
-        if (fontFormat == FontVerter.FontFormat.OTF)
+        if (fontFormat == FontVerter.FontFormat.OTF) {
             return new CFFToOpenTypeConverter(this);
-        if (fontFormat == FontVerter.FontFormat.WOFF1)
+        }
+        if (fontFormat == FontVerter.FontFormat.WOFF1) {
             return new CombinedFontConverter(new CFFToOpenTypeConverter(this), new OtfToWoffConverter());
-        if (fontFormat == FontVerter.FontFormat.WOFF2)
+        }
+        if (fontFormat == FontVerter.FontFormat.WOFF2) {
             return new CombinedFontConverter(new CFFToOpenTypeConverter(this), new OtfToWoffConverter.OtfToWoff2Converter());
+        }
 
         throw new FontNotSupportedException("Font conversion not supported");
     }
 
     public String getName() {
         String name = font.getName();
-        if (name.isEmpty())
+        if (name.isEmpty()) {
             name = nonNullDictEntry("FullName", String.class);
+        }
 
         return name;
     }
@@ -106,8 +112,9 @@ public class CffFontAdapter implements FVFont {
 
     public String getFamilyName() {
         String name = nonNullDictEntry("FamilyName", String.class);
-        if (name.isEmpty())
+        if (name.isEmpty()) {
             name = nonNullDictEntry("FullName", String.class);
+        }
 
         return name;
     }
@@ -148,11 +155,13 @@ public class CffFontAdapter implements FVFont {
         Object obj = font.getTopDict().get("FontBBox");
         ArrayList<Integer> boundingBox = null;
 
-        if (obj != null && obj instanceof ArrayList)
+        if (obj != null && obj instanceof ArrayList) {
             boundingBox = (ArrayList<Integer>) obj;
+        }
 
-        if (boundingBox == null || boundingBox.size() < 4)
+        if (boundingBox == null || boundingBox.size() < 4) {
             boundingBox = createDefaultBoundingBox();
+        }
 
         return boundingBox;
     }
@@ -192,38 +201,36 @@ public class CffFontAdapter implements FVFont {
 
     public List<GlyphMapReader.GlyphMapping> getGlyphMaps() throws IOException {
         Map<Integer, String> glyphIdsToNames = getGlyphIdsToNames();
-        if (glyphIdsToNames.size() != 0)
+        if (glyphIdsToNames.size() != 0) {
             return GlyphMapReader.readGlyphsToNames(glyphIdsToNames, getEncoding());
+        }
 
         return GlyphMapReader.readCharCodesToGlyphs(getCharCodeToGlyphIds(), getEncoding());
     }
 
     public Encoding getEncoding() {
-		if (font instanceof EncodedFont) {
-			try {
-				Encoding encoding = ((EncodedFont) font).getEncoding();
-				if (encoding.getCodeToNameMap().values().size() > 1) {
-					return encoding;
-				}
-			} catch (IOException error) {
-				LOG.error("", error);
-			}
-		}
-
-		return CFFStandardEncoding.getInstance();
-	}
-
+        if (font instanceof EncodedFont) {
+            Encoding encoding = ((EncodedFont) font).getEncoding();
+            if (encoding.getCodeToNameMap().values().size() > 1) {
+                return encoding;
+            }
+        }
+        return CFFStandardEncoding.getInstance();
+    }
 
     private <X> X nonNullDictEntry(String key, Class<X> type) {
         Object value = font.getTopDict().get(key);
-        if (value != null)
+        if (value != null) {
             return (X) value;
+        }
 
-        if (type == String.class)
+        if (type == String.class) {
             return (X) "";
+        }
 
-        if (type == Integer.class)
-            return (X) new Integer(1);
+        if (type == Integer.class) {
+            return (X) Integer.valueOf(1);
+        }
 
         return (X) "";
     }
@@ -257,12 +264,10 @@ public class CffFontAdapter implements FVFont {
 
     public List<CffGlyph> getGlyphs() throws IOException {
         List<CffGlyph> glyphs = new ArrayList<CffGlyph>();
-
         for (GlyphMapReader.GlyphMapping mapOn : getGlyphMaps()) {
             CffGlyph glyph = createGlyph();
-
             Type2CharString charStr = font.getType2CharString(mapOn.glyphId);
-            glyph.readType2Sequence(charStr.getType2Sequence());
+//            glyph.readType2Sequence(charStr.getType2Sequence());
             glyph.map = mapOn;
             glyph.charStr = charStr;
             glyphs.add(glyph);
@@ -273,8 +278,9 @@ public class CffFontAdapter implements FVFont {
 
     public Integer getDefaultWidth() {
         String key = "defaultWidthX";
-        if (!getPrivateDict().containsKey(key))
+        if (!getPrivateDict().containsKey(key)) {
             return 1000;
+        }
 
         return (Integer) getPrivateDict().get(key);
     }
@@ -282,19 +288,21 @@ public class CffFontAdapter implements FVFont {
     public Integer getNominalWidth() {
         String key = "nominalWidthX";
 
-        if (!getPrivateDict().containsKey(key))
+        if (!getPrivateDict().containsKey(key)) {
             return 1000;
+        }
 
         return (Integer) getPrivateDict().get(key);
     }
 
     Map<String, Object> getPrivateDict() {
-        if (font instanceof CFFType1Font)
+        if (font instanceof CFFType1Font) {
             return ((CFFType1Font) font).getPrivateDict();
-        else {
+        } else {
             Map<String, Object> dict = new HashMap<String, Object>();
-            for (Map<String, Object> dictOn : ((CFFCIDFont) font).getPrivDicts())
+            for (Map<String, Object> dictOn : ((CFFCIDFont) font).getPrivDicts()) {
                 dict.putAll(dictOn);
+            }
 
             return dict;
         }
@@ -310,6 +318,7 @@ public class CffFontAdapter implements FVFont {
     }
 
     public static class CffGlyph {
+
         private int leftSideBearing = 0;
         private Integer advancedWidth;
         Integer nominalWidth;
@@ -336,10 +345,11 @@ public class CffFontAdapter implements FVFont {
         public void readType2Sequence(List<Object> type2Sequence) {
             Object firstObj = type2Sequence.get(0);
 
-            if (firstObj instanceof Integer)
+            if (firstObj instanceof Integer) {
                 advancedWidth = nominalWidth + (Integer) firstObj;
-            else
+            } else {
                 advancedWidth = defaultWidth;
+            }
 
             parseHints(type2Sequence);
         }
@@ -356,8 +366,9 @@ public class CffFontAdapter implements FVFont {
                     commandOn.name = command.toString();
                     commands.add(commandOn);
 
-                } else if (objOn instanceof Integer && commandOn != null)
+                } else if (objOn instanceof Integer && commandOn != null) {
                     commandOn.values.add((Integer) objOn);
+                }
             }
 
             for (Command command : commands) {
@@ -372,6 +383,7 @@ public class CffFontAdapter implements FVFont {
         }
 
         static class Command {
+
             String name;
             List<Integer> values = new LinkedList<Integer>();
         }

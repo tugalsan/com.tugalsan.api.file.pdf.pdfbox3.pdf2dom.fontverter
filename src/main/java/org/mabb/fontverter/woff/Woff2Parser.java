@@ -19,8 +19,8 @@ package org.mabb.fontverter.woff;
 
 import org.mabb.fontverter.woff.Woff2Font.Woff2Table;
 import org.mabb.fontverter.woff.WoffConstants.TableFlagType;
-import org.meteogroup.jbrotli.BrotliDeCompressor;
-import org.meteogroup.jbrotli.libloader.BrotliLibraryLoader;
+//import org.meteogroup.jbrotli.BrotliDeCompressor;
+//import org.meteogroup.jbrotli.libloader.BrotliLibraryLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,7 +74,7 @@ public class Woff2Parser extends WoffParser {
 
     private void parseCompressedBlockTableData() throws IOException {
         byte[] block = input.readBytes(font.header.totalCompressedSize);
-        block = brotliDecompress(block);
+//        block = brotliDecompress(block);
 
         int offset = 0;
         for (WoffTable tableOn : font.getTables()) {
@@ -91,12 +91,12 @@ public class Woff2Parser extends WoffParser {
         }
     }
 
-    private byte[] brotliDecompress(byte[] compressed) {
-        BrotliLibraryLoader.loadBrotli();
-
-        byte[] decompressed = new byte[compressed.length * 4];
-        int decompressLength = new BrotliDeCompressor().deCompress(compressed, decompressed);
-
-        return Arrays.copyOfRange(decompressed, 0, decompressLength);
-    }
+//    private byte[] brotliDecompress(byte[] compressed) {
+//        BrotliLibraryLoader.loadBrotli();
+//
+//        byte[] decompressed = new byte[compressed.length * 4];
+//        int decompressLength = new BrotliDeCompressor().deCompress(compressed, decompressed);
+//
+//        return Arrays.copyOfRange(decompressed, 0, decompressLength);
+//    }
 }

@@ -23,9 +23,9 @@ import org.mabb.fontverter.converter.CombinedFontConverter;
 import org.mabb.fontverter.converter.FontConverter;
 import org.mabb.fontverter.converter.OtfToWoffConverter;
 import org.mabb.fontverter.converter.WoffToOtfConverter;
-import org.meteogroup.jbrotli.Brotli;
-import org.meteogroup.jbrotli.BrotliStreamCompressor;
-import org.meteogroup.jbrotli.libloader.BrotliLibraryLoader;
+//import org.meteogroup.jbrotli.Brotli;
+//import org.meteogroup.jbrotli.BrotliStreamCompressor;
+//import org.meteogroup.jbrotli.libloader.BrotliLibraryLoader;
 
 import java.io.IOException;
 
@@ -34,7 +34,7 @@ import static org.mabb.fontverter.woff.WoffConstants.TableFlagType.glyf;
 import static org.mabb.fontverter.woff.WoffConstants.TableFlagType.loca;
 
 public class Woff2Font extends WoffFont {
-    private byte[] cachedCompressedBlock;
+//    private byte[] cachedCompressedBlock;
 
     public WoffTable createTable() {
         return new Woff2Font.Woff2Table(new byte[0], "arbitrary");
@@ -54,12 +54,12 @@ public class Woff2Font extends WoffFont {
         parser.parse(fontFile, this);
     }
 
-    byte[] getCompressedDataBlock() throws IOException {
-        if (cachedCompressedBlock == null)
-            cachedCompressedBlock = brotliCompress(super.getCompressedDataBlock());
-
-        return cachedCompressedBlock;
-    }
+//    byte[] getCompressedDataBlock() throws IOException {
+//        if (cachedCompressedBlock == null)
+//            cachedCompressedBlock = brotliCompress(super.getCompressedDataBlock());
+//
+//        return cachedCompressedBlock;
+//    }
 
     byte[] getRawData() throws IOException {
         byte[] bytes = super.getRawData();
@@ -69,20 +69,20 @@ public class Woff2Font extends WoffFont {
         return bytes;
     }
 
-    private byte[] brotliCompress(byte[] bytes) {
-        BrotliLibraryLoader.loadBrotli();
-
-        Brotli.Parameter param = new Brotli.Parameter()
-                .setMode(Brotli.Mode.TEXT)
-                .setQuality(11)
-                .setLgwin(10)
-                .setLgblock(24);
-        BrotliStreamCompressor streamCompressor = new BrotliStreamCompressor(param);
-        byte[] compressed = streamCompressor.compressArray(bytes, true);
-        streamCompressor.close();
-
-        return compressed;
-    }
+//    private byte[] brotliCompress(byte[] bytes) {
+//        BrotliLibraryLoader.loadBrotli();
+//
+//        Brotli.Parameter param = new Brotli.Parameter()
+//                .setMode(Brotli.Mode.TEXT)
+//                .setQuality(11)
+//                .setLgwin(10)
+//                .setLgblock(24);
+//        BrotliStreamCompressor streamCompressor = new BrotliStreamCompressor(param);
+//        byte[] compressed = streamCompressor.compressArray(bytes, true);
+//        streamCompressor.close();
+//
+//        return compressed;
+//    }
 
     public FontProperties getProperties() {
         FontProperties properties = new FontProperties();
