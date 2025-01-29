@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.io;
 
 import org.apache.commons.io.EndianUtils;
@@ -23,6 +22,7 @@ import org.mabb.fontverter.NotImplementedException;
 import java.io.IOException;
 
 public class LittleEndianOutputStream implements FontDataOutput {
+
     FontDataOutputStream stream = new FontDataOutputStream();
 
     public byte[] toByteArray() {

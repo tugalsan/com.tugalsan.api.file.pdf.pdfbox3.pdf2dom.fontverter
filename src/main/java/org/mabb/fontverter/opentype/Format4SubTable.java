@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.opentype;
 
 import org.apache.fontbox.cff.CFFStandardEncoding;
@@ -29,6 +28,7 @@ import java.util.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
 class Format4SubTable extends CmapSubTable {
+
     private static final Logger log = getLogger(Format4SubTable.class);
 
     private static final int FORMAT4_HEADER_SIZE = 16;
@@ -68,32 +68,35 @@ class Format4SubTable extends CmapSubTable {
         writer.writeUnsignedShort(getEntrySelector());
         writer.writeUnsignedShort(getRangeShift());
 
-        for (Integer endEntryOn : ends)
+        for (Integer endEntryOn : ends) {
             writer.writeUnsignedShort(endEntryOn);
+        }
         // array end code
         writer.writeUnsignedShort(65535);
 
         // 'reservedPad' Set to 0
         writer.writeUnsignedShort(0);
 
-        for (Integer startEntryOn : starts)
+        for (Integer startEntryOn : starts) {
             writer.writeUnsignedShort(startEntryOn);
+        }
         // array end code
         writer.writeUnsignedShort(65535);
 
-        for (Integer deltaEntryOn : deltas)
+        for (Integer deltaEntryOn : deltas) {
             writer.writeUnsignedShort(deltaEntryOn);
+        }
         // array end code
         writer.writeUnsignedShort(1);
 
-        for (Integer rangeOffsets : idRangeOffsets)
+        for (Integer rangeOffsets : idRangeOffsets) {
             writer.writeUnsignedShort(0);
+        }
 //            writer.writeUnsignedShort(rangeOffsets);
         // array end code
         writer.writeUnsignedShort(0);
 
 //        writeIndexedGlyphs(writer);
-
         byte[] data = writer.toByteArray();
         setDataHeaderLength(data);
         return data;
@@ -104,8 +107,9 @@ class Format4SubTable extends CmapSubTable {
 
         for (int segIndex = 0; segIndex < idRangeOffsets.size(); segIndex++) {
             Integer idRangeOn = idRangeOffsets.get(segIndex);
-            if (idRangeOn == 0)
+            if (idRangeOn == 0) {
                 continue;
+            }
 
             writeSegmentGlyphs(writer, segIndex);
         }
@@ -121,8 +125,9 @@ class Format4SubTable extends CmapSubTable {
             long glyphOffset = glyphsStartPos + ((idRangeOn / 2) + glyphIndex + (segIndex - getSegmentCount())) * 2;
 
             int paddingNeeded = (int) (glyphOffset - position - 1);
-            if (paddingNeeded > 0)
+            if (paddingNeeded > 0) {
                 writer.write(new byte[paddingNeeded]);
+            }
 
             IndexedGlyph glyphOn = glyphs.get(glyphIndex);
             writer.writeUnsignedShort(glyphOn.glyphId);
@@ -157,8 +162,9 @@ class Format4SubTable extends CmapSubTable {
                 if (delta < 0) {
                     idRangeOffsets.add((numSetOffsets + 1) * 2);
                     numSetOffsets++;
-                } else
+                } else {
                     idRangeOffsets.add(0);
+                }
 
                 idRangeGlyphs.add(new LinkedList<IndexedGlyph>());
             }
@@ -169,15 +175,17 @@ class Format4SubTable extends CmapSubTable {
                 rangeGlyphs.add(new IndexedGlyph(glyphIdOn, charCodeOn));
             }
 
-            if (needAddSegment && lastCharCode != -1)
+            if (needAddSegment && lastCharCode != -1) {
                 ends.add(lastCharCode);
+            }
 
             lastCharCode = charCodeOn;
         }
 
         // add last one not caught in loop
-        if (entries.size() >= 1)
+        if (entries.size() >= 1) {
             ends.add(entries.get(entries.size() - 1).getKey());
+        }
     }
 
     private void initSegments() {
@@ -281,8 +289,9 @@ class Format4SubTable extends CmapSubTable {
 
     private List<Map.Entry<Integer, Integer>> getOrderedCharCodeToGlyphIds() {
         List<Map.Entry<Integer, Integer>> charCodeEntries = new ArrayList<Map.Entry<Integer, Integer>>();
-        for (Map.Entry<Integer, Integer> entryOn : charCodeToGlyphId.entrySet())
+        for (Map.Entry<Integer, Integer> entryOn : charCodeToGlyphId.entrySet()) {
             charCodeEntries.add(entryOn);
+        }
 
         Collections.sort(charCodeEntries, new Comparator<Map.Entry<Integer, Integer>>() {
             @Override
@@ -295,6 +304,7 @@ class Format4SubTable extends CmapSubTable {
     }
 
     private static class IndexedGlyph {
+
         public int glyphId;
         public int charCode;
 

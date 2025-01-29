@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.opentype;
 
 import java.awt.geom.Point2D;

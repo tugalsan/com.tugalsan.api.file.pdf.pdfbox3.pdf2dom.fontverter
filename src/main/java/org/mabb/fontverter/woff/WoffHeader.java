@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.woff;
 
 import org.mabb.fontverter.io.DataTypeBindingSerializer;
@@ -23,6 +22,7 @@ import org.mabb.fontverter.io.DataTypeProperty;
 import java.io.IOException;
 
 public class WoffHeader {
+
     static final int WOFF_1_SIGNATURE = 0x774F4646;
     static final int WOFF_2_SIGNATURE = 0x774F4632;
 
@@ -103,17 +103,17 @@ public class WoffHeader {
         return majorVersion == 1;
     }
 
-
     // !! fixme waiiit I think majorVersion might be the font version not woff version?
     private void clean() {
         majorVersion = getWoffSignatureVersion();
     }
 
     short getWoffSignatureVersion() {
-        if (signature == WOFF_1_SIGNATURE)
+        if (signature == WOFF_1_SIGNATURE) {
             return 1;
-        else if (signature == WOFF_2_SIGNATURE)
+        } else if (signature == WOFF_2_SIGNATURE) {
             return 2;
+        }
 
         return -1;
     }
@@ -122,4 +122,3 @@ public class WoffHeader {
         return signature == WOFF_2_SIGNATURE || signature == WOFF_1_SIGNATURE;
     }
 }
-

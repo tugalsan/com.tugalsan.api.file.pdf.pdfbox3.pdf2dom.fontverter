@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.eot;
 
 import com.google.common.primitives.Bytes;
@@ -29,6 +28,7 @@ import java.util.Arrays;
 import static org.mabb.fontverter.io.DataTypeProperty.DataType.*;
 
 public class EotHeader {
+
     public final static long VERSION_ONE = 0x00010000;
     public final static long VERSION_TWO = 0x00020001;
     public final static long VERSION_THREE = 0x00020002;

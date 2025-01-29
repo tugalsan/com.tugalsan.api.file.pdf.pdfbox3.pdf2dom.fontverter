@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.woff;
 
 import org.mabb.fontverter.validator.RuleValidator;
@@ -24,11 +23,13 @@ import org.mabb.fontverter.woff.Woff1Font.Woff1Table;
 import java.io.IOException;
 
 public class Woff1Validator extends RuleValidator<Woff1Font> {
+
     public Woff1Validator() {
         addRuleDefinition(new TableDirectoryRules());
     }
 
     public static class TableDirectoryRules {
+
         @ValidateRule(message = "Table offsets are overlapping")
         public String offsetsOverlapping(Woff1Font font) throws IOException {
             String overlapErrors = "";
@@ -36,8 +37,9 @@ public class Woff1Validator extends RuleValidator<Woff1Font> {
 
             for (WoffTable table : font.tables) {
                 Woff1Table tableOn = ((Woff1Table) table);
-                if (tableOn.offset != positionOn)
+                if (tableOn.offset != positionOn) {
                     overlapErrors += String.format("\n Table %s %d != %d", tableOn.getTag(), tableOn.offset, positionOn);
+                }
 
                 positionOn += tableOn.getCompressedData().length;
             }
@@ -51,8 +53,9 @@ public class Woff1Validator extends RuleValidator<Woff1Font> {
 
             for (WoffTable table : font.tables) {
                 Woff1Table tableOn = ((Woff1Table) table);
-                if (tableOn.offset % 4 != 0)
+                if (tableOn.offset % 4 != 0) {
                     paddingErrors += String.format("\n Table %s %d %% 4 != 0", tableOn.getTag(), tableOn.offset);
+                }
             }
 
             return paddingErrors;

@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.opentype;
 
 import org.apache.commons.lang3.StringUtils;
@@ -37,6 +36,7 @@ import static org.mabb.fontverter.opentype.TtfGlyph.CoordinateFlagType.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class TtfGlyph {
+
     private static final Logger log = getLogger(TtfGlyph.class);
 
     @DataTypeProperty(dataType = SHORT)
@@ -84,11 +84,12 @@ public class TtfGlyph {
         glyph.glyphId = font.getGlyfTable().getGlyphs().size();
         glyph.rawData = data;
 
-        if (glyph.isComposite())
+        if (glyph.isComposite()) {
             glyph.useRawData = true;
-        else
-            // x[] and y[] vals can be variable length so have to do manually vs annotation
+        } else // x[] and y[] vals can be variable length so have to do manually vs annotation
+        {
             glyph.readSimpleGlyphData(reader);
+        }
 
         return glyph;
     }
@@ -98,17 +99,19 @@ public class TtfGlyph {
     }
 
     public byte[] generateData() throws IOException {
-        if (isEmpty())
+        if (isEmpty()) {
             return new byte[0];
+        }
 
         // dont support write for composite glyphs yet
-        if (rawData != null && useRawData)
+        if (rawData != null && useRawData) {
             return rawData;
-
+        }
 
         int t = 85;
-        if (instructionLength > t)
+        if (instructionLength > t) {
             instructionLength = t;
+        }
 
         FontDataOutputStream writer = new FontDataOutputStream();
         DataTypeBindingSerializer serializer = new DataTypeBindingSerializer();
@@ -117,20 +120,24 @@ public class TtfGlyph {
 
         for (GlyphCoordinate pointOn : points) {
             CoordinateFlagSet coordFlags = new CoordinateFlagSet();
-            if (pointOn.isOnCurve())
+            if (pointOn.isOnCurve()) {
                 coordFlags.add(ON_CURVE);
+            }
 
             writer.write(coordFlags.write());
         }
 
-        for (GlyphCoordinate pointOn : points)
+        for (GlyphCoordinate pointOn : points) {
             writer.writeShort((int) pointOn.x);
+        }
 
-        for (GlyphCoordinate pointOn : points)
+        for (GlyphCoordinate pointOn : points) {
             writer.writeShort((int) pointOn.y);
+        }
 
-        if (writer.size() % 2 != 0)
+        if (writer.size() % 2 != 0) {
             writer.writeByte(0);
+        }
 
         return writer.toByteArray();
     }
@@ -156,22 +163,26 @@ public class TtfGlyph {
     private void readCoordinates(FontDataInput reader) throws IOException {
         for (CoordinateFlagSet flagSetOn : flags) {
             List<Integer> coords = tryGetXCoords(reader, flagSetOn);
-            if (coords == null)
+            if (coords == null) {
                 break;
+            }
 
-            for (Integer xOn : coords)
+            for (Integer xOn : coords) {
                 points.add(new GlyphCoordinate(xOn, 0, flagSetOn));
+            }
         }
 
         int yIndex = 0;
         for (CoordinateFlagSet flagSetOn : flags) {
             try {
                 List<Integer> coords = tryGetYCoords(reader, flagSetOn, yIndex);
-                if (coords == null)
+                if (coords == null) {
                     break;
+                }
 
-                for (int i = 0; i < coords.size(); i++)
+                for (int i = 0; i < coords.size(); i++) {
                     points.get(i + yIndex).y = coords.get(i);
+                }
 
                 yIndex += coords.size();
             } catch (EOFException ex) {
@@ -192,19 +203,20 @@ public class TtfGlyph {
         List<Integer> coords = new LinkedList<Integer>();
 
         for (int j = 0; j < coordFlags.repeatCount + 1; j++) {
-            if (useNegative1Byte && is1Byte)
+            if (useNegative1Byte && is1Byte) {
                 coords.add(-(reader.readByte() & 0xFF));
-            else if (is1Byte)
+            } else if (is1Byte) {
                 coords.add(reader.readByte() & 0xFF);
-
-            else if (useSame2ByteCoord)
+            } else if (useSame2ByteCoord) {
                 coords.add(0);
-            else
+            } else {
                 coords.add((int) reader.readShort());
+            }
         }
 
-        if (coords.size() == 0)
+        if (coords.size() == 0) {
             throw new IOException("TTF glyph read coordinates array of 0 " + (isX ? "Xs" : "Ys"));
+        }
 
         return coords;
     }
@@ -245,8 +257,9 @@ public class TtfGlyph {
     }
 
     int getNumberOfPoints() {
-        if (countourEndPoints == null)
+        if (countourEndPoints == null) {
             return 0;
+        }
 
         return countourEndPoints[countourEndPoints.length - 1] + 1;
     }
@@ -256,7 +269,8 @@ public class TtfGlyph {
     }
 
     /**
-     * Debug only method at the moment, will not return an entireley accurate path in many cases.
+     * Debug only method at the moment, will not return an entireley accurate
+     * path in many cases.
      */
     List<Path2D.Double> getPaths() {
         LinkedList<Path2D.Double> paths = new LinkedList<Path2D.Double>();
@@ -267,8 +281,9 @@ public class TtfGlyph {
         for (Integer endPtOn : countourEndPoints) {
             Path2D.Double pathOn = new Path2D.Double();
 
-            if (startPtOn == 0)
+            if (startPtOn == 0) {
                 pathOn.moveTo(0, 0);
+            }
 
             Point2D.Double firstPoint = new Point2D.Double();
 
@@ -279,13 +294,15 @@ public class TtfGlyph {
                 point.x = relativePoint.x + lastPoint.x;
                 point.y = relativePoint.y + lastPoint.y;
 
-                if (startPtOn != 0 && i == startPtOn)
+                if (startPtOn != 0 && i == startPtOn) {
                     pathOn.moveTo(point.x, point.y);
-                else
+                } else {
                     pathOn.lineTo(point.x, point.y);
+                }
 
-                if (i == startPtOn)
+                if (i == startPtOn) {
                     firstPoint = point;
+                }
 
                 lastPoint = point;
             }
@@ -319,8 +336,9 @@ public class TtfGlyph {
                 countourOn.add(relativePoint);
 //                countourOn.add(point);
 
-                if (i == startPtOn)
+                if (i == startPtOn) {
                     firstPoint = point;
+                }
 
                 lastPoint = point;
             }
@@ -340,20 +358,24 @@ public class TtfGlyph {
                 Point2D.Double ptOn = countourOn.get(i);
 
                 // last point is filler for otf glyph
-                if (i != countourOn.size() - 1)
+                if (i != countourOn.size() - 1) {
                     points.add(new GlyphCoordinate(ptOn.x, ptOn.y, new CoordinateFlagSet()));
+                }
             }
         }
     }
 
     public String toString() {
-        if (font.getCmap() == null)
+        if (font.getCmap() == null) {
             return "CMap table is null can not get string data for glyph.";
+        }
 
         String names = "";
-        for (GlyphMapReader.GlyphMapping mapOn : font.getCmap().getGlyphMappings())
-            if (mapOn.glyphId == glyphId)
+        for (GlyphMapReader.GlyphMapping mapOn : font.getCmap().getGlyphMappings()) {
+            if (mapOn.glyphId == glyphId) {
                 names += mapOn.name + ", ";
+            }
+        }
 
         return String.format("Glyph Index:'%d' Used For Chars:'%s'", glyphId, names);
     }
@@ -376,6 +398,7 @@ public class TtfGlyph {
     }
 
     protected static class GlyphCoordinate extends Point2D.Double {
+
         CoordinateFlagSet flags;
 
         public GlyphCoordinate(double x, double y, CoordinateFlagSet flags) {
@@ -389,6 +412,7 @@ public class TtfGlyph {
     }
 
     protected static class CoordinateFlagSet extends LinkedList<CoordinateFlagType> {
+
         public int repeatCount = 0;
         boolean forX = true;
 
@@ -423,8 +447,9 @@ public class TtfGlyph {
             for (CoordinateFlagType typeOn : CoordinateFlagType.values()) {
                 char bitOn = binary.charAt(8 - typeOn.getValue() - 1);
 
-                if (bitOn == '1')
+                if (bitOn == '1') {
                     flags.add(typeOn);
+                }
             }
 
             return flags;

@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.opentype.TtfInstructions.instructions.graphic;
 
 import org.mabb.fontverter.io.FontDataInputStream;
@@ -29,6 +28,7 @@ import static org.mabb.fontverter.FontVerterUtils.isBitSet;
 import static org.mabb.fontverter.opentype.TtfInstructions.TtfGraphicsState.ScanDropoutMode.*;
 
 public class ScanConversionControlInstruction extends TtfInstruction {
+
     public int[] getCodeRanges() {
         return new int[]{0x85};
     }
@@ -42,19 +42,25 @@ public class ScanConversionControlInstruction extends TtfInstruction {
         List<ScanDropoutMode> modes = vm.getGraphicsState().dropoutControlModes;
         modes.clear();
 
-        if (isBitSet(8, flags))
+        if (isBitSet(8, flags)) {
             modes.add(TRUE_IF_PPEM_LESS_THAN_THRESHOLD);
-        if (isBitSet(9, flags))
+        }
+        if (isBitSet(9, flags)) {
             modes.add(TRUE_IF_GLYPH_IS_ROTATED);
-        if (isBitSet(10, flags))
+        }
+        if (isBitSet(10, flags)) {
             modes.add(TRUE_IF_GLYPH_STRETCHED);
+        }
 
-        if (isBitSet(11, flags))
+        if (isBitSet(11, flags)) {
             modes.add(FALSE_UNLESS_PPEM_LESS_THAN_THRESHOLD);
-        if (isBitSet(12, flags))
+        }
+        if (isBitSet(12, flags)) {
             modes.add(FALSE_UNLESS_STRETCHED);
-        if (isBitSet(13, flags))
+        }
+        if (isBitSet(13, flags)) {
             modes.add(FALSE_UNLESS_STRETCHED);
+        }
 
         vm.getGraphicsState().droputThreshold = (flags & 0xFF);
     }

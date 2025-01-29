@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.eot;
 
 import org.mabb.fontverter.FVFont;
@@ -33,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EotFont implements FVFont {
+
     private EotHeader header;
     private OpenTypeFont font;
 
@@ -46,8 +46,9 @@ public class EotFont implements FVFont {
         FontDataOutputStream os = new FontDataOutputStream();
         os.write(header.getData());
 
-        if (font == null)
+        if (font == null) {
             throw new IOException("Embedded font is not set");
+        }
         os.write(font.getData());
 
         byte[] data = os.toByteArray();
@@ -84,10 +85,12 @@ public class EotFont implements FVFont {
     }
 
     public FontConverter createConverterForType(FontVerter.FontFormat fontFormat) throws FontNotSupportedException {
-        if (fontFormat == FontVerter.FontFormat.OTF)
+        if (fontFormat == FontVerter.FontFormat.OTF) {
             return new EotToOpenTypeConverter();
-        if (fontFormat == FontVerter.FontFormat.EOT)
+        }
+        if (fontFormat == FontVerter.FontFormat.EOT) {
             return new IdentityConverter();
+        }
 
         throw new FontNotSupportedException("");
     }
@@ -103,7 +106,6 @@ public class EotFont implements FVFont {
     public List<RuleValidator.FontValidatorError> getValidationErrors() {
         return new ArrayList<RuleValidator.FontValidatorError>();
     }
-
 
     public FontProperties getProperties() {
         FontProperties properties = new FontProperties();

@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.opentype;
 
 import org.apache.fontbox.encoding.Encoding;
@@ -24,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 
 public class GlyphMapReader {
+
     private static Logger log = LoggerFactory.getLogger(GlyphMapReader.class);
 
     public static List<GlyphMapping> readGlyphsToNames(Map<Integer, String> idToNames, Encoding encoding) {
@@ -32,17 +32,19 @@ public class GlyphMapReader {
 
         for (Map.Entry<Integer, String> nameSetOn : idToNames.entrySet()) {
             String name = nameSetOn.getValue();
-            if (symbolCharToWord.containsKey(name))
+            if (symbolCharToWord.containsKey(name)) {
                 name = symbolCharToWord.get(name);
+            }
 
             int charCode = nameToCode(name, encoding, usedCodes);
             int glyphId = nameSetOn.getKey();
 
-            if (charCode != 0)
+            if (charCode != 0) {
                 glyphMappings.add(new GlyphMapping(glyphId, charCode, name));
-            else if (!name.equals(".notdef"))
+            } else if (!name.equals(".notdef")) {
                 log.warn("Could not find character code for glyph name. Name:'{}' GlyphID:'{}'",
                         nameSetOn.getValue(), nameSetOn.getKey());
+            }
         }
 
         return glyphMappings;
@@ -62,15 +64,17 @@ public class GlyphMapReader {
     }
 
     private static int nameToCode(String name, Encoding encoding, Map<Integer, Integer> usedCodes) {
-        if (symbolCharToWord.containsKey(name))
+        if (symbolCharToWord.containsKey(name)) {
             name = symbolCharToWord.get(name);
+        }
 
         int code = 0;
         for (Map.Entry<Integer, String> entryOn : encoding.getCodeToNameMap().entrySet()) {
             int codeOn = entryOn.getKey();
 
-            if (entryOn.getValue().equals(name) && !usedCodes.containsKey(codeOn))
+            if (entryOn.getValue().equals(name) && !usedCodes.containsKey(codeOn)) {
                 code = entryOn.getKey();
+            }
         }
 
         // glyph names can map to multiple id's so we have to remove the id from our search after mapping
@@ -80,6 +84,7 @@ public class GlyphMapReader {
     }
 
     public static class GlyphMapping {
+
         public final Integer glyphId;
         public Integer charCode;
         public final String name;

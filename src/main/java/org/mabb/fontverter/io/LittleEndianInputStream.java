@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.io;
 
 import org.apache.commons.io.EndianUtils;
@@ -24,6 +23,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 
 public class LittleEndianInputStream extends FilterInputStream implements FontDataInput {
+
     Charset encoding = FontDataOutputStream.OPEN_TYPE_CHARSET;
 
     public LittleEndianInputStream(byte[] data) {
@@ -40,10 +40,11 @@ public class LittleEndianInputStream extends FilterInputStream implements FontDa
 
     public byte[] readBytes(int length) throws IOException {
         byte[] bytes = new byte[length];
-        for (int i = 0;i < length; i++)
+        for (int i = 0; i < length; i++) {
             bytes[i] = (byte) in.read();
+        }
 
-        return  bytes;
+        return bytes;
     }
 
     public void seek(int offset) {

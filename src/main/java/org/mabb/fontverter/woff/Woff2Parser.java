@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.woff;
 
 import org.mabb.fontverter.woff.Woff2Font.Woff2Table;
@@ -29,17 +28,20 @@ import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 public class Woff2Parser extends WoffParser {
+
     private static final Logger log = LoggerFactory.getLogger(Woff2Parser.class);
 
     protected void initalizeFont() {
-        if (font == null)
+        if (font == null) {
             font = WoffFont.createBlankFont(2);
+        }
     }
 
     @Override
     protected void parseTables() throws IOException {
-        for (int i = 0; i < font.header.numTables; i++)
+        for (int i = 0; i < font.header.numTables; i++) {
             parseDirectoryEntry();
+        }
 
         parseCompressedBlockTableData();
     }
@@ -61,10 +63,12 @@ public class Woff2Parser extends WoffParser {
         table.originalLength = input.readUIntBase128();
 
         // transformLength present IFF non null transform ie something before brotli compress
-        if (table.isTableTransformed())
+        if (table.isTableTransformed()) {
             table.transformLength = input.readUIntBase128();
-        if (table.transformLength == 0)
+        }
+        if (table.transformLength == 0) {
             table.transformLength = table.originalLength;
+        }
 
         log.debug("Woff2 parse table dir read: {} {} o-len:" + table.originalLength + " t-len:" + table.transformLength,
                 table.tag, table.getTransform());
@@ -80,8 +84,9 @@ public class Woff2Parser extends WoffParser {
         for (WoffTable tableOn : font.getTables()) {
             try {
                 int end = tableOn.transformLength + offset;
-                if (end > block.length)
+                if (end > block.length) {
                     end = block.length;
+                }
 
                 tableOn.tableData = Arrays.copyOfRange(block, offset, end);
                 offset += tableOn.transformLength;

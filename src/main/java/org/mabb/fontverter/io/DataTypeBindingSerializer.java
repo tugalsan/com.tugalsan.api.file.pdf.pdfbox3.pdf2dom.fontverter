@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.io;
 
 import java.io.IOException;
@@ -23,12 +22,14 @@ import java.lang.reflect.*;
 import java.util.*;
 
 public class DataTypeBindingSerializer {
+
     private FontDataOutput writer;
     private DataTypeAnnotationReader propReader = new DataTypeAnnotationReader();
 
     public byte[] serialize(Object object) throws DataTypeSerializerException {
         return serialize(object, new FontDataOutputStream(FontDataOutputStream.OPEN_TYPE_CHARSET));
     }
+
     public byte[] serialize(Object object, FontDataOutput writer) throws DataTypeSerializerException {
         this.writer = writer;
         Class type = object.getClass();
@@ -53,26 +54,30 @@ public class DataTypeBindingSerializer {
 
     private void serializeProperty(Object object, AccessibleObject propertyOn)
             throws Exception {
-        if (!propertyOn.isAnnotationPresent(DataTypeProperty.class))
+        if (!propertyOn.isAnnotationPresent(DataTypeProperty.class)) {
             return;
+        }
 
         Annotation annotation = propertyOn.getAnnotation(DataTypeProperty.class);
         DataTypeProperty property = (DataTypeProperty) annotation;
-        if (propReader.isIgnoreProperty(property, object))
+        if (propReader.isIgnoreProperty(property, object)) {
             return;
+        }
 
         Object propValue;
-        if (propertyOn instanceof Method)
+        if (propertyOn instanceof Method) {
             propValue = ((Method) propertyOn).invoke(object);
-        else if (propertyOn instanceof Field)
+        } else if (propertyOn instanceof Field) {
             propValue = ((Field) propertyOn).get(object);
-        else
+        } else {
             throw new DataTypeSerializerException("Byte property binding on unknown type");
+        }
 
-        if (property.isArray())
+        if (property.isArray()) {
             writeArrayValue((Object[]) propValue, property, object);
-        else
+        } else {
             writeValue(property, propValue);
+        }
     }
 
     private void writeValue(DataTypeProperty property, Object fieldValue) throws IOException {
@@ -116,19 +121,20 @@ public class DataTypeBindingSerializer {
                 writer.writeByte((Byte) fieldValue);
                 break;
             case UINT_BASE_128:
-                throw new IOException("Data type annotation serialization is not implemented for type: " +
-                        property.dataType());
+                throw new IOException("Data type annotation serialization is not implemented for type: "
+                        + property.dataType());
         }
     }
 
     private void writeArrayValue(Object[] array, DataTypeProperty binding, Object object)
             throws NoSuchFieldException, IllegalAccessException, IOException, InvocationTargetException {
         int arrayLength = propReader.getPropertyArrayLength(binding, object);
-        if (arrayLength < 0)
+        if (arrayLength < 0) {
             throw new IOException("Array length must be set for array data types.");
+        }
 
-        for (int i = 0; i < arrayLength; i++)
+        for (int i = 0; i < arrayLength; i++) {
             writeValue(binding, array[i]);
+        }
     }
 }
-

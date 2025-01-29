@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.io;
 
 import org.mabb.fontverter.FontVerterUtils;
@@ -32,6 +31,7 @@ import static org.mabb.fontverter.io.DataTypeProperty.DataType.BYTE_ARRAY;
 import static org.mabb.fontverter.io.DataTypeProperty.DataType.STRING;
 
 class DataTypeAnnotationReader {
+
     public DataTypeAnnotationReader() {
     }
 
@@ -55,9 +55,10 @@ class DataTypeAnnotationReader {
             DataTypeProperty annotationOn = getPropertyAnnotation(propertyOn);
 
             boolean isVarLengthType = annotationOn.dataType() == BYTE_ARRAY || annotationOn.dataType() == STRING;
-            if (isVarLengthType && annotationOn.constLength() < 1)
-                throw new DataTypeSerializerException("byteLength annotation field is required for " +
-                        annotationOn.dataType());
+            if (isVarLengthType && annotationOn.constLength() < 1) {
+                throw new DataTypeSerializerException("byteLength annotation field is required for "
+                        + annotationOn.dataType());
+            }
         }
 
         sortProperties(properties);
@@ -70,12 +71,14 @@ class DataTypeAnnotationReader {
     public boolean isIgnoreProperty(DataTypeProperty property, Object object)
             throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         String ignoreIf = property.ignoreIf();
-        if (!ignoreIf.isEmpty())
+        if (!ignoreIf.isEmpty()) {
             return runIgnoreFilter(object, ignoreIf);
+        }
 
         String includeIf = property.includeIf();
-        if (!includeIf.isEmpty())
+        if (!includeIf.isEmpty()) {
             return !runIgnoreFilter(object, includeIf);
+        }
 
         return false;
     }
@@ -83,16 +86,18 @@ class DataTypeAnnotationReader {
     public int getPropertyArrayLength(DataTypeProperty property, Object object)
             throws NoSuchFieldException, IllegalAccessException, InvocationTargetException {
         Field field = FontVerterUtils.findPrivateField(property.arrayLength(), object.getClass());
-        if (field != null)
+        if (field != null) {
             return (int) field.getLong(object);
+        }
         Method method = FontVerterUtils.findPrivateMethod(property.arrayLength(), object.getClass());
 
         return ((Number) method.invoke(object)).intValue();
     }
 
     private boolean runIgnoreFilter(Object object, String ignoreIf) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        if (ignoreIf.isEmpty())
+        if (ignoreIf.isEmpty()) {
             return false;
+        }
 
         boolean hasNotOperator = false;
         if (ignoreIf.startsWith("!")) {
@@ -110,8 +115,9 @@ class DataTypeAnnotationReader {
             filterResult = (Boolean) method.invoke(object);
         }
 
-        if (hasNotOperator)
+        if (hasNotOperator) {
             filterResult = !filterResult;
+        }
 
         resetAccessibility(originalAccessibility, object.getClass());
         return filterResult;
@@ -129,12 +135,14 @@ class DataTypeAnnotationReader {
     private void sortProperties(List<AccessibleObject> properties) throws DataTypeSerializerException {
         boolean hasorder = false;
         for (AccessibleObject propOn : properties) {
-            if (getPropertyAnnotation(propOn).order() != -1)
+            if (getPropertyAnnotation(propOn).order() != -1) {
                 hasorder = true;
+            }
 
         }
-        if (!hasorder)
+        if (!hasorder) {
             return;
+        }
 
         Collections.sort(properties, new Comparator<Object>() {
             public int compare(Object obj1, Object obj2) {
@@ -151,10 +159,11 @@ class DataTypeAnnotationReader {
     }
 
     private DataTypeProperty getPropertyAnnotation(Object property) throws DataTypeSerializerException {
-        if (property instanceof Field)
+        if (property instanceof Field) {
             return ((Field) property).getAnnotation(DataTypeProperty.class);
-        else if (property instanceof Method)
+        } else if (property instanceof Method) {
             return ((Method) property).getAnnotation(DataTypeProperty.class);
+        }
 
         throw new DataTypeSerializerException("Could not find annotation for property " + property.toString());
     }

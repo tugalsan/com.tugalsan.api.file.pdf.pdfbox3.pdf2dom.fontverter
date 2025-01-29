@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.converter;
 
 import org.mabb.fontverter.FVFont;
@@ -24,6 +23,7 @@ import org.mabb.fontverter.woff.WoffFont;
 import java.io.IOException;
 
 public class OtfToWoffConverter implements FontConverter {
+
     OpenTypeFont otfFont;
     private WoffFont woffFont;
     protected int woffVersion = 1;
@@ -41,11 +41,13 @@ public class OtfToWoffConverter implements FontConverter {
     }
 
     private void addFontTables() throws IOException {
-        for (OpenTypeTable tableOn : otfFont.getTables())
+        for (OpenTypeTable tableOn : otfFont.getTables()) {
             woffFont.addFontTable(tableOn.getUnpaddedData(), tableOn.getTableType(), tableOn.getChecksum());
+        }
     }
 
     public static class OtfToWoff2Converter extends OtfToWoffConverter {
+
         public OtfToWoff2Converter() {
             woffVersion = 2;
         }

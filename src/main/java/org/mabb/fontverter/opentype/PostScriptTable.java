@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.opentype;
 
 import org.mabb.fontverter.io.DataTypeBindingDeserializer;
@@ -27,6 +26,7 @@ import java.util.List;
 import static org.mabb.fontverter.opentype.GlyphMapReader.*;
 
 public class PostScriptTable extends OpenTypeTable {
+
     @DataTypeProperty(dataType = DataType.FIXED32)
     private float version;
 
@@ -131,23 +131,26 @@ public class PostScriptTable extends OpenTypeTable {
     }
 
     public int getNumGlyphs() {
-        if (numGlyphs > 257)
+        if (numGlyphs > 257) {
             return numGlyphs - 258;
+        }
 
         return numGlyphs;
     }
 
     void normalize() throws IOException {
-        if (font.getCmap() != null)
+        if (font.getCmap() != null) {
             loadGlyphsFromCmap();
+        }
 
         super.normalize();
     }
 
     private void loadGlyphsFromCmap() {
         numGlyphs = font.getCmap().getGlyphCount();
-        if (numGlyphs < 1)
+        if (numGlyphs < 1) {
             return;
+        }
 
         font.getCmap().getGlyphMappings();
 

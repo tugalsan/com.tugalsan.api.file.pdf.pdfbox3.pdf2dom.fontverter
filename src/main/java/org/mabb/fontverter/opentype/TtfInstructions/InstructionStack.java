@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.opentype.TtfInstructions;
 
 import org.slf4j.Logger;
@@ -25,6 +24,7 @@ import java.util.Stack;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class InstructionStack extends Stack<Object> {
+
     private static final Logger log = getLogger(InstructionStack.class);
     boolean typeCheckExceptions = false;
 
@@ -78,15 +78,16 @@ public class InstructionStack extends Stack<Object> {
         return obj;
     }
 
-
     private void error(String msg) throws IOException {
-        if (typeCheckExceptions)
+        if (typeCheckExceptions) {
             throw new InstructionStackWrongTypeException(msg);
-        else
+        } else {
             log.debug("TTF stack pop type not expected: " + msg);
+        }
     }
 
     public class InstructionStackWrongTypeException extends IOException {
+
         public InstructionStackWrongTypeException(String message) {
             super(message);
         }

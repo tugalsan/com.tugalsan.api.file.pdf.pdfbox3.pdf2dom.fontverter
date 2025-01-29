@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.opentype;
 
 import org.mabb.fontverter.io.DataTypeSerializerException;
@@ -24,6 +23,7 @@ import org.mabb.fontverter.io.DataTypeBindingSerializer;
 import java.nio.charset.Charset;
 
 public class NameRecord {
+
     static final int NAME_RECORD_SIZE = 12;
 
     @DataTypeProperty(dataType = DataTypeProperty.DataType.USHORT, order = 0)
@@ -98,8 +98,9 @@ public class NameRecord {
     }
 
     private Charset getEncoding() {
-        if (platformID == OtfNameConstants.WINDOWS_PLATFORM_ID)
+        if (platformID == OtfNameConstants.WINDOWS_PLATFORM_ID) {
             return Charset.forName("UTF-16");
+        }
         return Charset.forName("ISO_8859_1");
     }
 

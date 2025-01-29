@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.opentype;
 
 import org.mabb.fontverter.opentype.TtfInstructions.TtfInstructionParser;
@@ -25,6 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class FontProgramTable extends OpenTypeTable {
+
     private byte[] rawInstructions = new byte[0];
     private List<TtfInstruction> instructions = new LinkedList<TtfInstruction>();
 

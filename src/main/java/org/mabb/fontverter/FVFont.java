@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter;
 
 import org.mabb.fontverter.converter.FontConverter;
@@ -24,9 +23,11 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Less of an adapter and more of a base font class. Silly prefixed name to avoid confusion with jdk Font
+ * Less of an adapter and more of a base font class. Silly prefixed name to
+ * avoid confusion with jdk Font
  */
 public interface FVFont {
+
     /**
      * @return generated font data
      * @throws IOException error generating font data
@@ -60,7 +61,8 @@ public interface FVFont {
     boolean isValid();
 
     /**
-     * @return runs strict validator and returns any validation errors with the font.
+     * @return runs strict validator and returns any validation errors with the
+     * font.
      */
     List<FontValidatorError> getValidationErrors();
 
@@ -72,7 +74,8 @@ public interface FVFont {
     void normalize() throws IOException;
 
     /**
-     * @return extra information about the font such as the file ending it should use.
+     * @return extra information about the font such as the file ending it
+     * should use.
      */
     FontProperties getProperties();
 }

@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.woff;
 
 import org.mabb.fontverter.io.DataTypeBindingDeserializer;
@@ -25,6 +24,7 @@ import org.mabb.fontverter.woff.Woff1Font.Woff1Table;
 import java.io.IOException;
 
 public class WoffParser {
+
     protected WoffFont font;
     protected FontDataInput input;
 
@@ -44,25 +44,29 @@ public class WoffParser {
     }
 
     protected void initalizeFont() {
-        if (font == null)
+        if (font == null) {
             font = WoffFont.createBlankFont(1);
+        }
     }
 
     private WoffHeader parseHeader() throws IOException {
         DataTypeBindingDeserializer deserializer = new DataTypeBindingDeserializer();
 
         WoffHeader header = (WoffHeader) deserializer.deserialize(this.input, WoffHeader.class);
-        if (!header.isSignatureValid())
+        if (!header.isSignatureValid()) {
             throw new IOException("Woff header signature not recognized");
+        }
         return header;
     }
 
     protected void parseTables() throws IOException {
-        for (int i = 0; i < font.header.numTables; i++)
+        for (int i = 0; i < font.header.numTables; i++) {
             parseDirectoryEntry();
+        }
 
-        for (WoffTable tableOn : font.getTables())
+        for (WoffTable tableOn : font.getTables()) {
             parseTableData((Woff1Table) tableOn);
+        }
     }
 
     private void parseTableData(Woff1Table tableOn) throws IOException {

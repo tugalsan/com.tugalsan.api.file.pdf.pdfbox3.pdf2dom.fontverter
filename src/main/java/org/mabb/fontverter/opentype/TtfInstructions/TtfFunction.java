@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.opentype.TtfInstructions;
 
 import org.mabb.fontverter.opentype.TtfInstructions.instructions.TtfInstruction;
@@ -23,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TtfFunction {
+
     private List<TtfInstruction> instructions = new ArrayList<TtfInstruction>();
 
     public List<TtfInstruction> getInstructions() {

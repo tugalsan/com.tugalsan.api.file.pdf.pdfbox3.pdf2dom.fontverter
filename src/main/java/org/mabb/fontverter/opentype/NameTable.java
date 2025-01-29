@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.opentype;
 
 import org.mabb.fontverter.io.DataTypeBindingDeserializer;
@@ -30,6 +29,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class NameTable extends OpenTypeTable {
+
     static final int NAME_TABLE_HEADER_SIZE = 6;
     private static Logger log = LoggerFactory.getLogger(NameTable.class);
     private static final OtfNameConstants.Language defaultLanguage = OtfNameConstants.Language.UNITED_STATES;
@@ -68,10 +68,8 @@ public class NameTable extends OpenTypeTable {
             nameRecords.add(record);
         }
 
-
         // discard junk bytes between offset to actual string storage
 //        reader.readBytes(stringOffset - reader.getPosition());
-
         for (int i = 0; i < count; i++) {
             NameRecord recordOn = nameRecords.get(i);
             reader.seek(recordOn.offset + stringOffset);
@@ -92,18 +90,21 @@ public class NameTable extends OpenTypeTable {
         Collections.sort(nameRecords, new Comparator<NameRecord>() {
             @Override
             public int compare(NameRecord o1, NameRecord o2) {
-                if (o1.platformID != o2.platformID)
+                if (o1.platformID != o2.platformID) {
                     return o1.platformID < o2.platformID ? -1 : 1;
+                }
                 return o1.nameID < o2.nameID ? -1 : o1.nameID == o2.nameID ? 0 : 1;
 
             }
         });
 
-        for (NameRecord record : nameRecords)
+        for (NameRecord record : nameRecords) {
             writer.write(record.getRecordData());
+        }
 
-        for (NameRecord record : nameRecords)
+        for (NameRecord record : nameRecords) {
             writer.write(record.getStringData());
+        }
 
         return writer.toByteArray();
     }
@@ -113,9 +114,11 @@ public class NameTable extends OpenTypeTable {
     }
 
     public String getName(OtfNameConstants.RecordType type) {
-        for (NameRecord recordOn : nameRecords)
-            if (recordOn.nameID == type.getValue())
+        for (NameRecord recordOn : nameRecords) {
+            if (recordOn.nameID == type.getValue()) {
                 return recordOn.getRawString();
+            }
+        }
 
         return null;
     }
@@ -131,14 +134,16 @@ public class NameTable extends OpenTypeTable {
 
     private void deleteExisting(OtfNameConstants.RecordType type, OtfNameConstants.Language language) {
         List<NameRecord> deleteList = new LinkedList<NameRecord>();
-        for (NameRecord recordOn : nameRecords)
-            if (recordOn.nameID == type.getValue())
+        for (NameRecord recordOn : nameRecords) {
+            if (recordOn.nameID == type.getValue()) {
                 deleteList.add(recordOn);
+            }
+        }
 
-        for (NameRecord recordOn : deleteList)
+        for (NameRecord recordOn : deleteList) {
             nameRecords.remove(recordOn);
+        }
     }
-
 
     private void calculateOffsets() throws IOException {
         int offset = 0;
@@ -156,17 +161,20 @@ public class NameTable extends OpenTypeTable {
         String versionNumber = "";
 
         Matcher versionRegex = Pattern.compile("[1-9][0-9]*[.][0-9]*").matcher(version);
-        if (versionRegex.find())
+        if (versionRegex.find()) {
             versionNumber = versionRegex.group(0);
+        }
 
         if (versionNumber.isEmpty()) {
             Matcher noPeriodVersionRegex = Pattern.compile("[0-9]+").matcher(version);
-            if (noPeriodVersionRegex.find())
+            if (noPeriodVersionRegex.find()) {
                 versionNumber = noPeriodVersionRegex.group(0) + ".0";
+            }
         }
 
-        if (versionNumber.isEmpty())
+        if (versionNumber.isEmpty()) {
             versionNumber = "1.1";
+        }
 
         return "Version " + versionNumber;
     }

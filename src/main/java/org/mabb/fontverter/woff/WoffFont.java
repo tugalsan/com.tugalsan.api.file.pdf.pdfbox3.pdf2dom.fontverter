@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.woff;
 
 import org.mabb.fontverter.io.FontDataOutputStream;
@@ -28,6 +27,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public abstract class WoffFont implements FVFont {
+
     protected WoffHeader header;
     protected List<WoffTable> tables = new ArrayList<WoffTable>();
     protected List<FVFont> fonts = new ArrayList<FVFont>();
@@ -79,16 +79,18 @@ public abstract class WoffFont implements FVFont {
 
     byte[] getTableDirectoryData() throws IOException {
         FontDataOutputStream writer = new FontDataOutputStream(FontDataOutputStream.OPEN_TYPE_CHARSET);
-        for (WoffTable tableOn : tables)
+        for (WoffTable tableOn : tables) {
             writer.write(tableOn.getDirectoryData());
+        }
 
         return writer.toByteArray();
     }
 
     byte[] getCompressedDataBlock() throws IOException {
         FontDataOutputStream writer = new FontDataOutputStream(FontDataOutputStream.OPEN_TYPE_CHARSET);
-        for (WoffTable tableOn : tables)
+        for (WoffTable tableOn : tables) {
             writer.write(tableOn.getCompressedData());
+        }
 
         return writer.toByteArray();
     }
@@ -110,8 +112,9 @@ public abstract class WoffFont implements FVFont {
     }
 
     public String getName() {
-        if (fonts.size() == 0)
+        if (fonts.size() == 0) {
             return "Unknown Font Name";
+        }
 
         return fonts.get(0).getName();
     }

@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.opentype.TtfInstructions;
 
 import org.mabb.fontverter.io.FontDataInputStream;
@@ -35,6 +34,7 @@ import java.util.concurrent.ConcurrentHashMap;
     https://developer.apple.com/fonts/TrueType-Reference-Manual/RM05/Chap5.html
  */
 public class TtfInstructionParser {
+
     private static ConcurrentHashMap<Integer, Class> instructionTypes = new ConcurrentHashMap<Integer, Class>();
 
     private static Logger log = LoggerFactory.getLogger(TtfInstructionParser.class);
@@ -66,8 +66,9 @@ public class TtfInstructionParser {
         initInstructionTypes();
 
         Class type = instructionTypes.get(code);
-        if (type == null)
+        if (type == null) {
             return null;
+        }
 
         TtfInstruction instruction = (TtfInstruction) type.newInstance();
         instruction.code = code;
@@ -89,11 +90,12 @@ public class TtfInstructionParser {
                 TtfInstruction instructOn = (TtfInstruction) typeOn.newInstance();
 
                 int[] range = instructOn.getCodeRanges();
-                if (range.length == 1)
+                if (range.length == 1) {
                     instructionTypes.put(range[0], typeOn);
-                else {
-                    for (int i = range[0]; i <= range[1]; i++)
+                } else {
+                    for (int i = range[0]; i <= range[1]; i++) {
                         instructionTypes.put(i, typeOn);
+                    }
                 }
             }
         }

@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.woff;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -24,6 +23,7 @@ import org.mabb.fontverter.woff.WoffConstants.TableFlagType;
 import java.io.IOException;
 
 public abstract class WoffTable {
+
     int transformLength;
     int originalLength;
     protected byte[] tableData;
@@ -42,8 +42,9 @@ public abstract class WoffTable {
     public byte[] getCompressedData() throws IOException {
         if (compressedData == null) {
             compressedData = compress(tableData);
-            if (origLength() < compressedData.length)
+            if (origLength() < compressedData.length) {
                 compressedData = tableData;
+            }
         }
 
         return compressedData;
@@ -51,8 +52,9 @@ public abstract class WoffTable {
 
     protected byte[] padTableData(byte[] tableData) {
         byte[] padding = FontVerterUtils.tablePaddingNeeded(tableData);
-        if (padding.length != 0)
+        if (padding.length != 0) {
             paddingAdded = padding.length;
+        }
         return ArrayUtils.addAll(tableData, padding);
     }
 

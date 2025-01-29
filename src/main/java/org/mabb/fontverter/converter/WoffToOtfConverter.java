@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.converter;
 
 import org.apache.commons.lang3.StringUtils;
@@ -27,6 +26,7 @@ import org.mabb.fontverter.woff.WoffTable;
 import java.io.IOException;
 
 public class WoffToOtfConverter implements FontConverter {
+
     OpenTypeFont otfFont;
     WoffFont woffFont;
 
@@ -49,8 +49,9 @@ public class WoffToOtfConverter implements FontConverter {
             OpenTypeTable.OtfTableRecord record = new OpenTypeTable.OtfTableRecord();
 
             record.recordName = tableOn.getTag();
-            if (record.recordName.length() < 4)
+            if (record.recordName.length() < 4) {
                 record.recordName = record.recordName + StringUtils.repeat(" ", 4 - record.recordName.length());
+            }
             record.originalData = tableOn.getTableData();
 
             OpenTypeTable table = OpenTypeTable.createFromRecord(record, otfFont);
@@ -61,8 +62,9 @@ public class WoffToOtfConverter implements FontConverter {
 
         // have to order by dependant tables before doing table reads
         otfFont.orderTablesByDependencies();
-        for (OpenTypeTable tableOn : otfFont.getTables())
+        for (OpenTypeTable tableOn : otfFont.getTables()) {
             tableOn.readData(tableOn.record.originalData);
+        }
 
     }
 }

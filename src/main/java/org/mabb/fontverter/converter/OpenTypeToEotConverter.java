@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.converter;
 
 import org.mabb.fontverter.FVFont;
@@ -24,6 +23,7 @@ import org.mabb.fontverter.opentype.OpenTypeFont;
 import java.io.IOException;
 
 public class OpenTypeToEotConverter implements FontConverter {
+
     public FVFont convertFont(FVFont font) throws IOException {
         OpenTypeFont otf = (OpenTypeFont) font;
         EotFont eotFont = new EotFont();

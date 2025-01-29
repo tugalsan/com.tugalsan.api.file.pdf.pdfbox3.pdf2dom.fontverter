@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.io;
 
 import org.slf4j.Logger;
@@ -29,6 +28,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 public class DataTypeBindingDeserializer {
+
     private static Logger log = LoggerFactory.getLogger(DataTypeBindingDeserializer.class);
 
     private DataTypeAnnotationReader propReader = new DataTypeAnnotationReader();
@@ -56,8 +56,9 @@ public class DataTypeBindingDeserializer {
             List<AccessibleObject> properties = propReader.getProperties(toClass);
 
             for (AccessibleObject propertyOn : properties) {
-                if (stopDeserializeEarly)
+                if (stopDeserializeEarly) {
                     break;
+                }
 
                 try {
                     deserializeProperty(propertyOn, toObj);
@@ -77,24 +78,28 @@ public class DataTypeBindingDeserializer {
     }
 
     private void deserializeProperty(AccessibleObject propertyOn, Object object) throws Exception {
-        if (!propertyOn.isAnnotationPresent(DataTypeProperty.class))
+        if (!propertyOn.isAnnotationPresent(DataTypeProperty.class)) {
             return;
+        }
 
         Annotation annotation = propertyOn.getAnnotation(DataTypeProperty.class);
         DataTypeProperty binding = (DataTypeProperty) annotation;
-        if (propReader.isIgnoreProperty(binding, object))
+        if (propReader.isIgnoreProperty(binding, object)) {
             return;
+        }
 
         Object inValue = null;
         if (binding.isArray()) {
             inValue = readArrayValue((Field) propertyOn, object, binding);
-        } else
+        } else {
             inValue = readSingleValue(binding);
+        }
 
-        if (propertyOn instanceof Field)
+        if (propertyOn instanceof Field) {
             ((Field) propertyOn).set(object, inValue);
-        else
+        } else {
             throw new IOException("Method property deserialization not implemented" + propertyOn.toString());
+        }
     }
 
     private Object readSingleValue(DataTypeProperty property) throws IOException {
@@ -135,8 +140,9 @@ public class DataTypeBindingDeserializer {
 
     private Object readArrayValue(Field propertyOn, Object object, DataTypeProperty binding) throws NoSuchFieldException, IllegalAccessException, IOException, InvocationTargetException {
         int arrayLength = propReader.getPropertyArrayLength(binding, object);
-        if (arrayLength < 0)
+        if (arrayLength < 0) {
             throw new IOException("Array length must be set for array data types.");
+        }
 
         Object[] array = (Object[]) Array.newInstance(propertyOn.getType().getComponentType(), arrayLength);
 
@@ -144,8 +150,8 @@ public class DataTypeBindingDeserializer {
             try {
                 array[i] = readSingleValue(binding);
             } catch (Exception ex) {
-                String message = String.format("Array length ran over input data length." +
-                        " Index on: %d Array Length: %d", i, arrayLength);
+                String message = String.format("Array length ran over input data length."
+                        + " Index on: %d Array Length: %d", i, arrayLength);
 
                 if (isRecoverFromEOF()) {
                     stopDeserializeEarly = true;
@@ -168,4 +174,3 @@ public class DataTypeBindingDeserializer {
         return recoverFromEOF;
     }
 }
-

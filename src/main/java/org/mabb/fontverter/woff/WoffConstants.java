@@ -14,12 +14,12 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.woff;
 
 import org.apache.commons.lang3.StringUtils;
 
 public class WoffConstants {
+
     public enum TableFlagType {
         cmap(0), EBLC(16), CBDT(32), gvar(48),
         head(1), gasp(17), CBLC(33), hsty(49),
@@ -49,10 +49,11 @@ public class WoffConstants {
         }
 
         public static TableFlagType fromInt(int i) {
-            for (TableFlagType typeOn : TableFlagType.values())
+            for (TableFlagType typeOn : TableFlagType.values()) {
                 if (typeOn.getValue() == i) {
                     return typeOn;
                 }
+            }
 
             return arbitrary;
         }
@@ -61,8 +62,9 @@ public class WoffConstants {
             for (TableFlagType typeOn : TableFlagType.values()) {
                 String cleanedStr = str.trim().replace("/", "");
 
-                if (typeOn.name().equals(cleanedStr))
+                if (typeOn.name().equals(cleanedStr)) {
                     return typeOn;
+                }
             }
 
             return arbitrary;
@@ -70,12 +72,14 @@ public class WoffConstants {
 
         public String toString() {
             String name = this.name();
-            if (name.equals("OS2"))
+            if (name.equals("OS2")) {
                 name = "OS/2";
+            }
 
             // flag has to be 4 bytes long so add padding if only 3 chars
-            if (name.length() < 4)
+            if (name.length() < 4) {
                 name += StringUtils.repeat(' ', 4 - name.length());
+            }
             return name;
         }
     }

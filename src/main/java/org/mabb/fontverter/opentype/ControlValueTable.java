@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.opentype;
 
 import org.mabb.fontverter.io.FontDataInputStream;
@@ -29,6 +28,7 @@ import static org.mabb.fontverter.io.FontDataOutputStream.OPEN_TYPE_CHARSET;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class ControlValueTable extends OpenTypeTable {
+
     private static final Logger log = getLogger(ControlValueTable.class);
     private List<Short> values = new LinkedList<Short>();
 
@@ -38,8 +38,9 @@ public class ControlValueTable extends OpenTypeTable {
 
     public void readData(byte[] data) throws IOException {
         FontDataInputStream input = new FontDataInputStream(data);
-        while (input.available() >= 2)
+        while (input.available() >= 2) {
             values.add(input.readShort());
+        }
 
         if (input.available() == 1) {
             log.info("original cvt table data length not divisble by two, adding 1 byte padding.");
@@ -49,8 +50,9 @@ public class ControlValueTable extends OpenTypeTable {
 
     protected byte[] generateUnpaddedData() throws IOException {
         FontDataOutputStream out = new FontDataOutputStream(OPEN_TYPE_CHARSET);
-        for (Short valueOn : values)
+        for (Short valueOn : values) {
             out.writeShort(valueOn);
+        }
 
         return out.toByteArray();
     }
@@ -60,8 +62,9 @@ public class ControlValueTable extends OpenTypeTable {
     }
 
     public Short getValue(Long index) throws CvtValueNotFoundException {
-        if (index > values.size())
+        if (index > values.size()) {
             throw new CvtValueNotFoundException();
+        }
 
         return values.get(index.intValue());
     }

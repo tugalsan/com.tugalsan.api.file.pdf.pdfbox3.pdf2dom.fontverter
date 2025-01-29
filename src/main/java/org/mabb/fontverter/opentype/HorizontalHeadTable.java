@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.opentype;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -26,6 +25,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class HorizontalHeadTable extends OpenTypeTable {
+
     @DataTypeProperty(dataType = DataTypeProperty.DataType.FIXED32)
     public float version;
 
@@ -106,17 +106,18 @@ public class HorizontalHeadTable extends OpenTypeTable {
     }
 
     void normalize() throws IOException {
-        if (font.getHmtx().isFromParsedFont)
+        if (font.getHmtx().isFromParsedFont) {
             return;
+        }
 
         font.getHmtx().normalize();
         int[] widths = font.getHmtx().getAdvanceWidths();
         this.numberOfHMetrics = widths.length;
 
         List<Integer> widthsList = Arrays.asList(ArrayUtils.toObject(widths));
-        if (widthsList.size() > 0)
+        if (widthsList.size() > 0) {
             advanceWidthMax = Collections.max(widthsList);
-
+        }
 
     }
 }

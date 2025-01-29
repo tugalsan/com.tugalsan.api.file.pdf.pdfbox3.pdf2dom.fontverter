@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.opentype;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -28,6 +27,7 @@ import static org.mabb.fontverter.io.DataTypeProperty.*;
 import static org.mabb.fontverter.opentype.OtfNameConstants.*;
 
 public class OS2WinMetricsTable extends OpenTypeTable {
+
     @DataTypeProperty(dataType = DataType.USHORT)
     private int version;
 
@@ -208,8 +208,9 @@ public class OS2WinMetricsTable extends OpenTypeTable {
 
     void normalize() throws IOException {
         super.normalize();
-        if (panose == null)
+        if (panose == null) {
             panose = latinPanose.clone();
+        }
         calcPanose();
         calcEncodingRanges();
 
@@ -225,14 +226,15 @@ public class OS2WinMetricsTable extends OpenTypeTable {
             panose[0] = 5;
             panose[2] = 1;
             panose[4] = 1;
-        } else
+        } else {
             panose[0] = 2;
+        }
     }
 
-
     private void calcEncodingRanges() {
-        if (isFromParsedFont)
+        if (isFromParsedFont) {
             return;
+        }
 
         OtfEncodingType encode = font.getCmap().getCmapEncodingType();
         if (encode == OtfEncodingType.SYMBOL) {
@@ -251,12 +253,14 @@ public class OS2WinMetricsTable extends OpenTypeTable {
     }
 
     static class BinaryBlock {
+
         protected boolean[] binary;
 
         BinaryBlock(int size) {
             binary = new boolean[size];
-            for (int i = 0; i < binary.length; i++)
+            for (int i = 0; i < binary.length; i++) {
                 binary[i] = false;
+            }
         }
 
         ArrayList<Long> getRanges() {
@@ -283,6 +287,7 @@ public class OS2WinMetricsTable extends OpenTypeTable {
     }
 
     private static class UnicodeRanges extends BinaryBlock {
+
         UnicodeRanges() {
             super(128);
         }
@@ -297,6 +302,7 @@ public class OS2WinMetricsTable extends OpenTypeTable {
     }
 
     private static class CodePageRanges extends BinaryBlock {
+
         CodePageRanges() {
             super(64);
         }

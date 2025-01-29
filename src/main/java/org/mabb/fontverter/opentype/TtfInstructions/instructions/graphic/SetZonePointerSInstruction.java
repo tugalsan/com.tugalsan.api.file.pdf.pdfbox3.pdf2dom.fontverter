@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.opentype.TtfInstructions.instructions.graphic;
 
 import org.mabb.fontverter.io.FontDataInputStream;
@@ -35,13 +34,15 @@ public class SetZonePointerSInstruction extends TtfInstruction {
 
     public void execute(InstructionStack stack) throws IOException {
         Number zoneObj = stack.popNumber();
-        if (!(zoneObj instanceof Long))
+        if (!(zoneObj instanceof Long)) {
             log.warn("SetZonePointer Expected Uint32 but was int");
+        }
         Long zone = zoneObj.longValue();
 
-        if (zone > 1)
+        if (zone > 1) {
             throw new TtfVmRuntimeException(
                     "SetZonePointerS popped zone number must 0 (twilight zone) or 1 (glyph zone)");
+        }
 
         vm.getGraphicsState().zone0Id = zone;
         vm.getGraphicsState().zone1Id = zone;

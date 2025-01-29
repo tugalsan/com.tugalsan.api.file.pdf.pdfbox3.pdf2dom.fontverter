@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.opentype.TtfInstructions.instructions.control;
 
 import org.mabb.fontverter.io.FontDataInputStream;
@@ -24,6 +23,7 @@ import org.mabb.fontverter.opentype.TtfInstructions.instructions.TtfInstruction;
 import java.io.IOException;
 
 public class JumpOnFalseInstruction extends TtfInstruction {
+
     public int[] getCodeRanges() {
         return new int[]{0x79};
     }
@@ -34,7 +34,8 @@ public class JumpOnFalseInstruction extends TtfInstruction {
     public void execute(InstructionStack stack) throws IOException {
         Number condition = (Number) stack.pop();
 
-        if (condition.longValue() == 0)
+        if (condition.longValue() == 0) {
             vm.jumpOffset = (Integer) stack.pop();
+        }
     }
 }

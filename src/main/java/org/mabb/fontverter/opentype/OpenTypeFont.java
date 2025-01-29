@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.opentype;
 
 import org.apache.commons.lang3.StringUtils;
@@ -35,12 +34,14 @@ import java.util.List;
 import static org.mabb.fontverter.opentype.SfntHeader.*;
 
 /**
- * OpenType covers both .otf and .ttfs , .otf is for CFF type fonts and .ttf is used for TrueType outline fonts.
- * Microsft's OpenType is built on type of the original apple TrueType spec
- * OpenType spec can be found here: https://www.microsoft.com/typography/otspec/otff.htm
- * Apple TrueType spec can be found here: https://developer.apple.com/fonts/TrueType-Reference-Manual
+ * OpenType covers both .otf and .ttfs , .otf is for CFF type fonts and .ttf is
+ * used for TrueType outline fonts. Microsft's OpenType is built on type of the
+ * original apple TrueType spec OpenType spec can be found here:
+ * https://www.microsoft.com/typography/otspec/otff.htm Apple TrueType spec can
+ * be found here: https://developer.apple.com/fonts/TrueType-Reference-Manual
  */
 public class OpenTypeFont implements FVFont {
+
     SfntHeader sfntHeader;
     private List<OpenTypeTable> tables;
     private static Logger log = LoggerFactory.getLogger(OpenTypeFont.class);
@@ -90,9 +91,11 @@ public class OpenTypeFont implements FVFont {
 
     public boolean detectFormat(byte[] fontFile) {
         String[] headerMagicNums = new String[]{CFF_FLAVOR, VERSION_1, VERSION_2, VERSION_2_5};
-        for (String magicNumOn : headerMagicNums)
-            if (FontVerterUtils.bytesStartsWith(fontFile, magicNumOn))
+        for (String magicNumOn : headerMagicNums) {
+            if (FontVerterUtils.bytesStartsWith(fontFile, magicNumOn)) {
                 return true;
+            }
+        }
 
         return false;
     }
@@ -136,14 +139,17 @@ public class OpenTypeFont implements FVFont {
     }
 
     public void normalize() throws IOException {
-        if (getOs2() == null)
+        if (getOs2() == null) {
             createNewOS2WinMetricsTable();
+        }
 
-        if (getNameTable() == null)
+        if (getNameTable() == null) {
             setName(NameTable.createDefaultTable());
+        }
 
-        if (getPost() == null)
+        if (getPost() == null) {
             setPost(PostScriptTable.createDefaultTable(getOpenTypeVersion()));
+        }
 
         finalizeFont();
     }
@@ -209,15 +215,17 @@ public class OpenTypeFont implements FVFont {
 
     public void finalizeFont() throws IOException {
         // gott make sure checksums = 0 before doing calc
-        for (OpenTypeTable tableOn : tables)
+        for (OpenTypeTable tableOn : tables) {
             tableOn.resetCalculations();
+        }
 
         descendingSortedTables();
         normalizeTables();
         calculateOffsets(tables);
 
-        for (OpenTypeTable tableOn : tables)
+        for (OpenTypeTable tableOn : tables) {
             tableOn.finalizeRecord();
+        }
 
         // head checksum has to be very last after other checksums + offsets calculated so just grab full byte
         // output to calc instead of trying to re-edit the byte array at the right place
@@ -226,11 +234,13 @@ public class OpenTypeFont implements FVFont {
     }
 
     private void normalizeTables() throws IOException {
-        if (sfntHeader.sfntFlavor.isEmpty())
+        if (sfntHeader.sfntFlavor.isEmpty()) {
             sfntHeader.sfntFlavor = determineSfntFlavor();
+        }
 
-        if (getCmap() != null && getMxap() != null && !getMxap().isFromParsedFont)
+        if (getCmap() != null && getMxap() != null && !getMxap().isFromParsedFont) {
             getMxap().setNumGlyphs(getCmap().getGlyphCount());
+        }
 
         for (OpenTypeTable tableOn : tables) {
             tableOn.font = this;
@@ -239,10 +249,11 @@ public class OpenTypeFont implements FVFont {
     }
 
     private String determineSfntFlavor() {
-        if (getCffTable() != null)
+        if (getCffTable() != null) {
             return SfntHeader.CFF_FLAVOR;
-        else if (getPost() != null)
+        } else if (getPost() != null) {
             return SfntHeader.toVersionString(getPost().getVersion());
+        }
 
         return VERSION_1;
     }
@@ -253,11 +264,13 @@ public class OpenTypeFont implements FVFont {
 
         out.write(sfntHeader.getData());
 
-        for (OpenTypeTable tableOn : tables)
+        for (OpenTypeTable tableOn : tables) {
             out.write(tableOn.getRecordData());
+        }
 
-        for (OpenTypeTable tableOn : tables)
+        for (OpenTypeTable tableOn : tables) {
             out.write(tableOn.getData());
+        }
 
         return out.toByteArray();
     }
@@ -284,14 +297,18 @@ public class OpenTypeFont implements FVFont {
     }
 
     private static int dependencyOrderForTable(OpenTypeTable table) {
-        if (table instanceof HorizontalHeadTable)
+        if (table instanceof HorizontalHeadTable) {
             return 1;
-        if (table instanceof HorizontalMetricsTable)
+        }
+        if (table instanceof HorizontalMetricsTable) {
             return 2;
-        if (table instanceof GlyphLocationTable)
+        }
+        if (table instanceof GlyphLocationTable) {
             return 3;
-        if (table instanceof GlyphTable)
+        }
+        if (table instanceof GlyphTable) {
             return 4;
+        }
 
         return 0;
     }
@@ -299,8 +316,9 @@ public class OpenTypeFont implements FVFont {
     // Should be called before/after font data generation. While building up the font generateData is called multiple
     // times to calculate offsets and checksums before writing out the full font.
     private void clearTableDataCache() {
-        for (OpenTypeTable tableOn : tables)
+        for (OpenTypeTable tableOn : tables) {
             tableOn.clearDataCache();
+        }
     }
 
     public File getSourceFile() {
@@ -314,18 +332,21 @@ public class OpenTypeFont implements FVFont {
     public void removeTable(Class toRemoveType) {
         OpenTypeTable toRemoveTable = null;
         for (OpenTypeTable tableOn : tables) {
-            if (tableOn.getClass() == toRemoveType)
+            if (tableOn.getClass() == toRemoveType) {
                 toRemoveTable = tableOn;
+            }
         }
 
-        if (toRemoveTable != null)
+        if (toRemoveTable != null) {
             tables.remove(toRemoveTable);
+        }
     }
 
     private <T extends OpenTypeTable> T findTableType(Class type) {
         for (OpenTypeTable tableOn : tables) {
-            if (tableOn.getClass() == type)
+            if (tableOn.getClass() == type) {
                 return (T) tableOn;
+            }
         }
 
         return null;
@@ -432,7 +453,9 @@ public class OpenTypeFont implements FVFont {
         return findTableType(GlyphTable.class);
     }
 
-    public FontProgramTable getFpgmTable() { return findTableType(FontProgramTable.class); }
+    public FontProgramTable getFpgmTable() {
+        return findTableType(FontProgramTable.class);
+    }
 
     public List<OpenTypeTable> getTables() {
         return tables;

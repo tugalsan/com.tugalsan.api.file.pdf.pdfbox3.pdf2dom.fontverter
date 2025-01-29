@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.opentype;
 
 import org.mabb.fontverter.io.FontDataInput;
@@ -28,6 +27,7 @@ import java.util.*;
 import static org.mabb.fontverter.opentype.OtfNameConstants.*;
 
 abstract class CmapSubTable {
+
     public static final int CMAP_RECORD_BYTE_SIZE = 8;
 
     protected int formatNumber;
@@ -87,14 +87,16 @@ abstract class CmapSubTable {
     }
 
     protected static class Format0SubTable extends CmapSubTable {
+
         private static final int FORMAT0_HEADER_SIZE = 6 + 256;
         // LinkedHashMap important, for keeping ordering the same for loops
         private LinkedHashMap<Integer, Integer> charCodeToGlyphId = new LinkedHashMap<Integer, Integer>();
 
         public Format0SubTable() {
             formatNumber = 0;
-            for (int i = 0; i < 256; i++)
+            for (int i = 0; i < 256; i++) {
                 charCodeToGlyphId.put(i, 0);
+            }
         }
 
         @Override
@@ -142,6 +144,7 @@ abstract class CmapSubTable {
     }
 
     static class Format2SubTable extends CmapSubTable {
+
         public Format2SubTable() {
             formatNumber = 2;
         }
@@ -169,6 +172,7 @@ abstract class CmapSubTable {
     }
 
     static class Format6SubTable extends CmapSubTable {
+
         public Format6SubTable() {
             formatNumber = 6;
         }
@@ -196,6 +200,7 @@ abstract class CmapSubTable {
     }
 
     static class Format8SubTable extends CmapSubTable {
+
         public Format8SubTable() {
             formatNumber = 8;
         }
@@ -226,6 +231,7 @@ abstract class CmapSubTable {
     }
 
     static class Format10SubTable extends CmapSubTable {
+
         public Format10SubTable() {
             formatNumber = 10;
         }
@@ -256,6 +262,7 @@ abstract class CmapSubTable {
     }
 
     static class Format12SubTable extends CmapSubTable {
+
         public Format12SubTable() {
             formatNumber = 12;
         }
@@ -287,6 +294,7 @@ abstract class CmapSubTable {
     }
 
     static class Format13SubTable extends CmapSubTable {
+
         public Format13SubTable() {
             formatNumber = 13;
         }
@@ -318,6 +326,7 @@ abstract class CmapSubTable {
     }
 
     static class Format14SubTable extends CmapSubTable {
+
         public Format14SubTable() {
             formatNumber = 14;
         }

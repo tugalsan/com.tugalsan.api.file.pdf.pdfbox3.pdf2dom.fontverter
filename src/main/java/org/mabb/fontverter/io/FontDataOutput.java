@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.io;
 
 import java.io.Closeable;
@@ -23,6 +22,7 @@ import java.io.Flushable;
 import java.io.IOException;
 
 public interface FontDataOutput extends DataOutput, Flushable, Closeable {
+
     byte[] toByteArray();
 
     void writeString(String string) throws IOException;

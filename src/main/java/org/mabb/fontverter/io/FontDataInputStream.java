@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.io;
 
 import org.mabb.fontverter.FontVerterUtils;
@@ -26,10 +25,11 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 
 /**
- * Adds special font data type read functionality to data input stream
- * todo split out into woff/otf specific maybe
+ * Adds special font data type read functionality to data input stream todo
+ * split out into woff/otf specific maybe
  */
 public class FontDataInputStream extends DataInputStream implements FontDataInput {
+
     private final SeekableByteArrayInputStream byteInput;
     Charset encoding = FontDataOutputStream.OPEN_TYPE_CHARSET;
 
@@ -43,8 +43,9 @@ public class FontDataInputStream extends DataInputStream implements FontDataInpu
         long byte2 = read();
         long byte3 = read();
         long byte4 = read();
-        if (byte4 < 0)
+        if (byte4 < 0) {
             throw new EOFException();
+        }
         return (byte1 << 24) + (byte2 << 16) + (byte3 << 8) + (byte4 << 0);
     }
 
@@ -55,12 +56,14 @@ public class FontDataInputStream extends DataInputStream implements FontDataInpu
     }
 
     public byte[] readBytes(int length) throws IOException {
-        if (in.available() < length)
+        if (in.available() < length) {
             throw new IOException("Read length is larger than the available stream size");
+        }
 
         byte[] bytes = new byte[length];
-        for (int i = 0; i < bytes.length; i++)
+        for (int i = 0; i < bytes.length; i++) {
             bytes[i] = (byte) in.read();
+        }
         return bytes;
     }
 
@@ -74,12 +77,13 @@ public class FontDataInputStream extends DataInputStream implements FontDataInpu
         for (int i = 0; i < 5; i++) {
             int data_byte = readByte();
 
-            if (i == 0 && data_byte == 0x80)
+            if (i == 0 && data_byte == 0x80) {
                 throw new IOException("No leading 0's");
+            }
 
-
-            if ((accum & 0xFE000000) > 0)
+            if ((accum & 0xFE000000) > 0) {
                 throw new IOException("UIntBase128 read error If any of top 7 bits are set then << 7 would overflow");
+            }
 
             accum = (accum << 7) | (data_byte & 0x7F);
 
@@ -113,13 +117,15 @@ public class FontDataInputStream extends DataInputStream implements FontDataInpu
 
     public int[] readUnsignedShortArray(int length) throws IOException {
         int[] readArray = new int[length];
-        for (int i = 0; i < length; i++)
+        for (int i = 0; i < length; i++) {
             readArray[i] = readUnsignedShort();
+        }
 
         return readArray;
     }
 
     protected static class SeekableByteArrayInputStream extends ByteArrayInputStream {
+
         public SeekableByteArrayInputStream(byte[] buf) {
             super(buf);
         }

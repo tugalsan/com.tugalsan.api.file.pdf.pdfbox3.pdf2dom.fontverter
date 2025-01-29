@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter;
 
 import org.apache.commons.io.FileUtils;
@@ -32,6 +31,7 @@ import java.util.List;
 import java.util.Set;
 
 public class FontVerter {
+
     private static Logger log = LoggerFactory.getLogger(FontVerter.class);
     private static List<Class> adapters;
     private static final Object adapterLock = new Object();
@@ -46,14 +46,18 @@ public class FontVerter {
         public static final FontFormat TTF = OTF;
 
         public static FontFormat fromString(String value) {
-            if (value.equalsIgnoreCase("WOFF"))
+            if (value.equalsIgnoreCase("WOFF")) {
                 return WOFF1;
-            if (value.equalsIgnoreCase("OpenType"))
+            }
+            if (value.equalsIgnoreCase("OpenType")) {
                 return OTF;
-            if (value.equalsIgnoreCase("TrueType"))
+            }
+            if (value.equalsIgnoreCase("TrueType")) {
                 return OTF;
-            if (value.equalsIgnoreCase("EOT"))
+            }
+            if (value.equalsIgnoreCase("EOT")) {
                 return EOT;
+            }
 
             return FontFormat.valueOf(value.toUpperCase());
         }
@@ -95,23 +99,24 @@ public class FontVerter {
         // loop through and use first one to read without an error
         for (Class<? extends FVFont> adapterOn : adapters) {
             FVFont adapter = tryReadFontAdapter(fontData, adapterOn);
-            if (adapter != null)
+            if (adapter != null) {
                 return adapter;
+            }
         }
 
         // screwy double loop since CFF fonts don't have magic number header and was try catching around every font
         // adapter that matched in detectFormat, think just having CFF adapter always try last fixes this, but what if
         // a CFF starts with 'wOF2' or something? font-box bare CFF parser will often work on non CFF fonts anyway which
         // causes issues with that too, needa write own base CFF parser sometime.
-
         // if nothing can read go at it again and use the first one to throw an exception
         // as the exception message for debugging.
         for (Class<? extends FVFont> adapterOn : adapters) {
 
             try {
                 FVFont adapter = parseFont(fontData, adapterOn);
-                if (adapter != null)
+                if (adapter != null) {
                     return adapter;
+                }
             } catch (Exception ex) {
                 throw new IOException("FontVerter could not read the given font file.", ex);
             }
@@ -149,8 +154,9 @@ public class FontVerter {
                 // CFF always last to try
                 Class cffAdapter = null;
                 for (Class adapterOn : adapters) {
-                    if (adapterOn.getSimpleName().contains("CffFont"))
+                    if (adapterOn.getSimpleName().contains("CffFont")) {
                         cffAdapter = adapterOn;
+                    }
                 }
 
                 int cffIndex = adapters.indexOf(cffAdapter);
@@ -165,8 +171,9 @@ public class FontVerter {
     private static List<Class> removeAbstractClasses(List<Class> classes) {
         List<Class> filtered = new ArrayList<Class>();
         for (Class adapterOn : classes) {
-            if (!Modifier.isAbstract(adapterOn.getModifiers()))
+            if (!Modifier.isAbstract(adapterOn.getModifiers())) {
                 filtered.add(adapterOn);
+            }
         }
 
         return filtered;

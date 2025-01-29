@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter;
 
 import org.mabb.fontverter.io.FontDataInputStream;
@@ -25,6 +24,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 public class FontVerterUtils {
+
     public static Field findPrivateField(String fieldName, Class type) {
         Field[] fields = type.getDeclaredFields();
 
@@ -54,9 +54,11 @@ public class FontVerterUtils {
 
     public static boolean bytesStartsWith(byte[] data, String... startsWith) {
         String dataAsString = new String(data, FontDataOutputStream.OPEN_TYPE_CHARSET);
-        for (String matchOn : startsWith)
-            if (dataAsString.startsWith(matchOn))
+        for (String matchOn : startsWith) {
+            if (dataAsString.startsWith(matchOn)) {
                 return true;
+            }
+        }
 
         return false;
     }
@@ -65,43 +67,49 @@ public class FontVerterUtils {
         FontDataInputStream is = new FontDataInputStream(tableData);
 
         long checksum = 0;
-        while (is.available() >= 4)
+        while (is.available() >= 4) {
             checksum = checksum + is.readUnsignedInt();
+        }
 
         is.close();
         return checksum;
     }
 
     public static byte[] tablePaddingNeeded(byte[] tableData) {
-        if (tableData.length % 4 == 0)
+        if (tableData.length % 4 == 0) {
             return new byte[]{};
+        }
 
         int paddingNeeded = 4 - (tableData.length % 4);
         byte[] padding = new byte[paddingNeeded];
-        for (int i = 0; i < padding.length; i++)
+        for (int i = 0; i < padding.length; i++) {
             padding[i] = '\u0000';
+        }
 
         return padding;
     }
 
     public static int readUpperBits(int inByte, int nBits) throws IOException {
-        if (nBits > 8)
+        if (nBits > 8) {
             throw new IOException("Number of bits exceeds 8");
+        }
 
         return inByte >> (8 - nBits);
     }
 
     public static int readLowerBits(int inByte, int nBits) throws IOException {
-        if (nBits > 8)
+        if (nBits > 8) {
             throw new IOException("Number of bits exceeds 8");
+        }
 
         return inByte & (0x3F);
     }
 
     public static byte[] toPrimative(Byte[] objArray) {
         byte[] primArr = new byte[objArray.length];
-        for (int i = 0; i < objArray.length; i++)
+        for (int i = 0; i < objArray.length; i++) {
             primArr[i] = objArray[i];
+        }
 
         return primArr;
     }
@@ -115,8 +123,9 @@ public class FontVerterUtils {
     }
 
     public static String nonNullString(String string) {
-        if (string == null)
+        if (string == null) {
             return "";
+        }
 
         return string;
     }

@@ -14,13 +14,13 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.opentype;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CodePageRange {
+
     public static List<CodePageRange> CODE_PAGE_RANGES = new ArrayList<CodePageRange>();
     public final int bit;
     public final int codePage;
@@ -44,12 +44,12 @@ public class CodePageRange {
     public static final CodePageRange VIETNAMESE = new CodePageRange(8, 1258, "	Vietnamese");
     public static final CodePageRange THAI = new CodePageRange(16, 874, "Thai");
     public static final CodePageRange JIS_JAPAN = new CodePageRange(17, 932, "JIS/Japan");
-    public static final CodePageRange CHINESE_SIMPLIFIED_CHARS__PRC_AND_SINGAPORE =
-            new CodePageRange(18, 936, "Chinese: Simplified chars--PRC and Singapore");
+    public static final CodePageRange CHINESE_SIMPLIFIED_CHARS__PRC_AND_SINGAPORE
+            = new CodePageRange(18, 936, "Chinese: Simplified chars--PRC and Singapore");
 
     public static final CodePageRange KOREAN_WANSUNG = new CodePageRange(19, 949, "Korean Wansung");
-    public static final CodePageRange CHINESE_TRADITIONAL_CHARS__TAIWAN_AND_HONG_KONG =
-            new CodePageRange(20, 950, "Chinese: Traditional chars--Taiwan and Hong Kong");
+    public static final CodePageRange CHINESE_TRADITIONAL_CHARS__TAIWAN_AND_HONG_KONG
+            = new CodePageRange(20, 950, "Chinese: Traditional chars--Taiwan and Hong Kong");
 
     public static final CodePageRange KOREAN_JOHAB = new CodePageRange(21, 1361, "	Korean Johab");
     public static final CodePageRange MACINTOSH_CHARACTER_SET_US_ROMAN = new CodePageRange(29, 0, " Macintosh Character Set (US Roman)");
@@ -73,6 +73,7 @@ public class CodePageRange {
     public static final CodePageRange US = new CodePageRange(63, 437, "US");
 
     public static class OtfUnicodeRange {
+
         public static List<OtfUnicodeRange> UNICODE_RANGES = new ArrayList<OtfUnicodeRange>();
 
         public final int bit;

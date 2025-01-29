@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.converter;
 
 import org.apache.commons.lang3.StringUtils;
@@ -33,6 +32,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class PsType0ToOpenTypeConverter {
+
     private OpenTypeFont otfFont;
     private PDType0Font type0Font;
 
@@ -44,12 +44,12 @@ public class PsType0ToOpenTypeConverter {
 
         // so the descendant ttf font will usually have some important tables missing from it
         // that we need to create ourselves from data in the parent type 0 font.
-
         // always build cmap from type0 parent ourselves, cmaps existing in the ttf child tend to have some
         // issues in certain browsers and apps.
         convertCmap();
-        if (otfFont.getNameTable() == null || isCffDescendant())
+        if (otfFont.getNameTable() == null || isCffDescendant()) {
             convertNameRecords();
+        }
 
         otfFont.finalizeFont();
         otfFont.normalize();
@@ -62,8 +62,9 @@ public class PsType0ToOpenTypeConverter {
             OpenTypeParser otfParser = new OpenTypeParser();
 
             return otfParser.parse(ttfData);
-        } else if (isCffDescendant())
+        } else if (isCffDescendant()) {
             return buildFromCff();
+        }
 
         // don't think descendant can be anything but cff or ttf but just incase
         throw new IOException("Descendant font type not supported: " + descendantFont.getClass().getSimpleName());
@@ -85,11 +86,13 @@ public class PsType0ToOpenTypeConverter {
             int charCode = name.charAt(0);
             int glyphId = nameSetOn.getKey();
 
-            if (name.length() > 2 || charCode >= 0xFFFF)
+            if (name.length() > 2 || charCode >= 0xFFFF) {
                 throw new IOException("Multi byte glyph name not supported.");
+            }
 
-            if (charCode != 0)
+            if (charCode != 0) {
                 glyphMappings.add(new GlyphMapping(glyphId, charCode, name));
+            }
         }
 
         CmapTable cmapTable = CmapTable.createDefaultTable();
@@ -109,8 +112,9 @@ public class PsType0ToOpenTypeConverter {
             family = matcher.group(3);
 
             String subMatch = matcher.group(4);
-            if (!StringUtils.isEmpty(subMatch) && !subMatch.equals("Identity"))
+            if (!StringUtils.isEmpty(subMatch) && !subMatch.equals("Identity")) {
                 subFamily = subMatch;
+            }
         }
 
         names.setFontFullName(fullName);
@@ -124,8 +128,9 @@ public class PsType0ToOpenTypeConverter {
     @SuppressWarnings("unchecked")
     private Map<Integer, String> getType0CharToUnicode() throws IllegalAccessException {
         CMap cmap = (CMap) FontVerterUtils.findPrivateField("toUnicodeCMap", PDFont.class).get(type0Font);
-        if (cmap == null)
+        if (cmap == null) {
             return new HashMap<Integer, String>();
+        }
 
         return getCmapUnicodeMap(cmap);
     }
@@ -133,8 +138,9 @@ public class PsType0ToOpenTypeConverter {
     @SuppressWarnings("unchecked")
     private Map<Integer, String> getCmapUnicodeMap(CMap cmap) throws IllegalAccessException {
         Object mappings = FontVerterUtils.findPrivateField("charToUnicode", cmap.getClass()).get(cmap);
-        if (mappings == null)
+        if (mappings == null) {
             return new HashMap<Integer, String>();
+        }
 
         return (Map<Integer, String>) mappings;
     }

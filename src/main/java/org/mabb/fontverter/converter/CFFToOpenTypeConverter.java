@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.converter;
 
 import org.mabb.fontverter.opentype.GlyphMapReader.GlyphMapping;
@@ -26,6 +25,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class CFFToOpenTypeConverter implements FontConverter {
+
     private CffFontAdapter cffFont;
     private OpenTypeFont otfFont;
 

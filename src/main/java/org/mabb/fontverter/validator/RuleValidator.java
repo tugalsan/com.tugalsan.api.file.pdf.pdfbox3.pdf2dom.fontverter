@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.validator;
 
 import java.lang.reflect.InvocationTargetException;
@@ -24,10 +23,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Validates input T object against validation rules. Rules use the @ValidateRule annotation above methods and can be
- * any object type.
+ * Validates input T object against validation rules. Rules use the
+ * @ValidateRule annotation above methods and can be any object type.
  */
 public abstract class RuleValidator<T> {
+
     private T toValidate;
     private List<Object> ruleDefinitions = new ArrayList<Object>();
     List<FontValidatorError> errors = new LinkedList<FontValidatorError>();
@@ -38,8 +38,9 @@ public abstract class RuleValidator<T> {
         errors.clear();
         this.toValidate = toValidate;
 
-        for (Object ruleOn : ruleDefinitions)
+        for (Object ruleOn : ruleDefinitions) {
             evaluateRuleDefinition(ruleOn);
+        }
 
         return errors;
     }
@@ -49,11 +50,13 @@ public abstract class RuleValidator<T> {
         List<FontValidatorError> errors = validate(this.toValidate);
 
         String validateMessage = "";
-        for (FontValidatorError errorOn : errors)
+        for (FontValidatorError errorOn : errors) {
             validateMessage += "\n" + errorOn.toString();
+        }
 
-        if (errors.size() > 0)
+        if (errors.size() > 0) {
             throw new FontValidationException("Internal Validator error(s) " + validateMessage);
+        }
     }
 
     public void addRuleDefinition(Object ruleDefinition) {
@@ -62,22 +65,25 @@ public abstract class RuleValidator<T> {
 
     private void evaluateRuleDefinition(Object ruleOn) throws IllegalAccessException, InvocationTargetException {
         for (Method methodOn : ruleOn.getClass().getDeclaredMethods()) {
-            if (methodOn.isAnnotationPresent(ValidateRule.class))
+            if (methodOn.isAnnotationPresent(ValidateRule.class)) {
                 evaluateRule(methodOn, ruleOn);
+            }
         }
     }
 
     private void evaluateRule(Method methodOn, Object ruleDef) throws IllegalAccessException, InvocationTargetException {
         ValidateRule annotation = methodOn.getAnnotation(ValidateRule.class);
-        if (annotation.type().getValue() > validateLevel.getValue())
+        if (annotation.type().getValue() > validateLevel.getValue()) {
             return;
+        }
 
         Object methodResult = methodOn.invoke(ruleDef, toValidate);
 
         boolean isValid = true;
         String field = "";
-        if (methodResult instanceof Boolean)
+        if (methodResult instanceof Boolean) {
             isValid = (Boolean) methodResult;
+        }
         if (methodResult instanceof String) {
             field = (String) methodResult;
             isValid = field.isEmpty();
@@ -113,6 +119,7 @@ public abstract class RuleValidator<T> {
     }
 
     public static class FontValidatorError {
+
         private final ValidatorErrorType type;
         private final String message;
 

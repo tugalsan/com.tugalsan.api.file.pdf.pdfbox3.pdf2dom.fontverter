@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.opentype.TtfInstructions.instructions.graphic;
 
 import org.mabb.fontverter.io.FontDataInputStream;
@@ -26,6 +25,7 @@ import java.io.IOException;
 import static org.mabb.fontverter.opentype.TtfInstructions.graphicsengine.RoundSettings.RoundState.*;
 
 public class RoundDownToGridInstruction extends TtfInstruction {
+
     public int[] getCodeRanges() {
         return new int[]{0x7D};
     }

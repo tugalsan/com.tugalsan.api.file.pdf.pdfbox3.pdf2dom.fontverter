@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.woff;
 
 import org.apache.commons.lang3.StringUtils;
@@ -27,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WoffOutputStream extends FontDataOutputStream {
+
     private static Logger log = LoggerFactory.getLogger(WoffOutputStream.class);
 
     public WoffOutputStream() {
@@ -38,8 +38,9 @@ public class WoffOutputStream extends FontDataOutputStream {
         String binary = Integer.toBinaryString(num);
 
         while (!binary.isEmpty()) {
-            if (binary.length() < 7)
+            if (binary.length() < 7) {
                 binary = StringUtils.repeat("0", 7 - (binary.length() % 7)) + binary;
+            }
 
             String byteBinary = binary.substring(binary.length() - 7, binary.length());
 
@@ -51,17 +52,20 @@ public class WoffOutputStream extends FontDataOutputStream {
             binary = binary.substring(0, binary.length() - 7);
         }
 
-        for (byte byteOn : bytes)
+        for (byte byteOn : bytes) {
             write(byteOn);
+        }
     }
 
     public void writeFlagByte(int flag, int transform) throws IOException {
         String binary = Integer.toBinaryString(flag);
         String transBinary = Integer.toBinaryString(transform);
-        if (transBinary.length() < 2)
+        if (transBinary.length() < 2) {
             transBinary = StringUtils.repeat("0", 2 - transBinary.length()) + transBinary;
-        if (binary.length() < 6)
+        }
+        if (binary.length() < 6) {
             binary = StringUtils.repeat("0", 6 - binary.length()) + binary;
+        }
 
         binary = transBinary + binary;
         byte byteOn = (byte) (Integer.parseInt(binary, 2));

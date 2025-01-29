@@ -14,12 +14,12 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter;
 
 import static org.mabb.fontverter.FontVerterUtils.*;
 
 public class FontProperties {
+
     private String fileEnding;
     private String mimeType;
     private String cssFontFaceFormat;

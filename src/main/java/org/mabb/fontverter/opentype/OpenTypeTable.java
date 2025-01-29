@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.opentype;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -33,7 +32,9 @@ import java.util.List;
 import java.util.Set;
 
 public abstract class OpenTypeTable {
+
     public static class OtfTableRecord {
+
         @DataTypeProperty(dataType = DataTypeProperty.DataType.STRING, constLength = 4)
         public String recordName;
 
@@ -83,8 +84,9 @@ public abstract class OpenTypeTable {
             }
         }
 
-        if (createdTable == null)
+        if (createdTable == null) {
             createdTable = createUnknownTableTypeFallback(record);
+        }
 
         createdTable.record = record;
         createdTable.font = font;
@@ -112,8 +114,9 @@ public abstract class OpenTypeTable {
 
                 List<Class> filteredTables = new ArrayList<Class>();
                 for (Class tableTypeOn : tableTypes) {
-                    if (!tableTypeOn.getCanonicalName().contains("Canned") && tableTypeOn != UnknownTableType.class)
+                    if (!tableTypeOn.getCanonicalName().contains("Canned") && tableTypeOn != UnknownTableType.class) {
                         filteredTables.add(tableTypeOn);
+                    }
                 }
 
                 tableTypes = filteredTables;
@@ -131,11 +134,13 @@ public abstract class OpenTypeTable {
 
     public final byte[] getUnpaddedData() throws IOException {
         // big old kludge to handle conversion of tables types that arn't deserializable/parsable yet
-        if (rawParsedData != null)
+        if (rawParsedData != null) {
             return rawParsedData;
+        }
 
-        if (cachedUnpaddedData != null)
+        if (cachedUnpaddedData != null) {
             return cachedUnpaddedData;
+        }
 
         // open type tables should be padded to be divisible by 4
         cachedUnpaddedData = generateUnpaddedData();
@@ -206,8 +211,9 @@ public abstract class OpenTypeTable {
     }
 
     /**
-     * Should be called before/after font data generation. While building up the font generateData is called multiple
-     * times to calculate offsets and checksums before writing out the full font.
+     * Should be called before/after font data generation. While building up the
+     * font generateData is called multiple times to calculate offsets and
+     * checksums before writing out the full font.
      */
     public void clearDataCache() {
         cachedUnpaddedData = null;

@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.opentype.TtfInstructions.instructions.graphic;
 
 import org.mabb.fontverter.io.FontDataInputStream;
@@ -24,6 +23,7 @@ import org.mabb.fontverter.opentype.TtfInstructions.instructions.TtfInstruction;
 import java.io.IOException;
 
 public class ShiftPointWithReferencePointInstruction extends TtfInstruction {
+
     public int[] getCodeRanges() {
         return new int[]{0x32, 0x33};
     }
@@ -31,8 +31,9 @@ public class ShiftPointWithReferencePointInstruction extends TtfInstruction {
     public boolean useRp2 = true;
 
     public void read(FontDataInputStream in) throws IOException {
-        if (code == 0x33)
+        if (code == 0x33) {
             useRp2 = false;
+        }
     }
 
     public void execute(InstructionStack stack) throws IOException {

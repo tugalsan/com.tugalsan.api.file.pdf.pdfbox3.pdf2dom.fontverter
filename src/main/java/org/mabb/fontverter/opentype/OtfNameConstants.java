@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.opentype;
 
 public class OtfNameConstants {
+
     static final int WINDOWS_PLATFORM_ID = 3;
     static final int WINDOWS_DEFAULT_ENCODING = 1;
 
@@ -46,10 +46,11 @@ public class OtfNameConstants {
         }
 
         public static WeightClass fromInt(int i) {
-            for (WeightClass typeOn : WeightClass.values())
+            for (WeightClass typeOn : WeightClass.values()) {
                 if (typeOn.getValue() == i) {
                     return typeOn;
                 }
+            }
 
             return null;
         }
@@ -83,10 +84,11 @@ public class OtfNameConstants {
         }
 
         public static WidthClass fromInt(int i) {
-            for (WidthClass typeOn : WidthClass.values())
+            for (WidthClass typeOn : WidthClass.values()) {
                 if (typeOn.getValue() == i) {
                     return typeOn;
                 }
+            }
 
             return null;
         }
@@ -113,10 +115,11 @@ public class OtfNameConstants {
         }
 
         public static RecordType fromInt(int i) {
-            for (RecordType typeOn : RecordType.values())
+            for (RecordType typeOn : RecordType.values()) {
                 if (typeOn.getValue() == i) {
                     return typeOn;
                 }
+            }
 
             return null;
         }
@@ -143,10 +146,11 @@ public class OtfNameConstants {
         }
 
         public static OtfEncodingType fromInt(int i) {
-            for (OtfEncodingType typeOn : OtfEncodingType.values())
+            for (OtfEncodingType typeOn : OtfEncodingType.values()) {
                 if (typeOn.getValue() == i) {
                     return typeOn;
                 }
+            }
 
             return null;
         }
@@ -166,10 +170,11 @@ public class OtfNameConstants {
         }
 
         public static Language fromInt(int i) {
-            for (Language typeOn : Language.values())
+            for (Language typeOn : Language.values()) {
                 if (typeOn.getValue() == i) {
                     return typeOn;
                 }
+            }
 
             return null;
         }

@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.opentype;
 
 import org.mabb.fontverter.io.DataTypeProperty;
@@ -28,6 +27,7 @@ import java.util.List;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class GlyphLocationTable extends OpenTypeTable {
+
     private static final Logger log = getLogger(GlyphLocationTable.class);
 
     @DataTypeProperty(dataType = DataType.USHORT, isArray = true, ignoreIf = "isLongOffsets", arrayLength = "getNumGlyphs")
@@ -50,8 +50,9 @@ public class GlyphLocationTable extends OpenTypeTable {
 
     void normalize() throws IOException {
         GlyphTable glyf = font.getGlyfTable();
-        if (glyf == null)
+        if (glyf == null) {
             return;
+        }
 
         List<Long> offsets = new LinkedList<Long>();
         offsets.add(0L);
@@ -73,12 +74,14 @@ public class GlyphLocationTable extends OpenTypeTable {
     }
 
     public Long[] getOffsets() {
-        if (isLongOffsets())
+        if (isLongOffsets()) {
             return longOffsets;
+        }
 
         Long[] calcedShortOffsets = new Long[shortOffsets.length];
-        for (int i = 0; i < shortOffsets.length; i++)
+        for (int i = 0; i < shortOffsets.length; i++) {
             calcedShortOffsets[i] = (long) (shortOffsets[i] * 2);
+        }
 
         return calcedShortOffsets;
     }

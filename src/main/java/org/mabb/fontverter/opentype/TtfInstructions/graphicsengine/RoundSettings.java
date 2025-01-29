@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.opentype.TtfInstructions.graphicsengine;
 
 public class RoundSettings {
+
     public double period = 0;
     public double phase = 0;
     public double threshold = 0;
@@ -41,38 +41,41 @@ public class RoundSettings {
     }
 
     private void setPeriodFromFlag(byte periodFlag) {
-        if (periodFlag == 0)
+        if (periodFlag == 0) {
             period = 1.0 / 2.0;
-        else if (periodFlag == 1)
+        } else if (periodFlag == 1) {
             period = 1;
-        else if (periodFlag == 2)
+        } else if (periodFlag == 2) {
             period = 2;
+        }
     }
 
     private void set45DegPeriodFromFlag(byte periodFlag) {
-        if (periodFlag == 0)
+        if (periodFlag == 0) {
             period = Math.sqrt(2) / 2.0;
-        else if (periodFlag == 1)
+        } else if (periodFlag == 1) {
             period = Math.sqrt(2);
-        else if (periodFlag == 2)
+        } else if (periodFlag == 2) {
             period = 2 * Math.sqrt(2);
+        }
     }
 
     private void setPhaseFromFlag(byte phaseFlag) {
-        if (phaseFlag == 0)
+        if (phaseFlag == 0) {
             phase = 0;
-        else if (phaseFlag == 1)
+        } else if (phaseFlag == 1) {
             phase = period / 4.0;
-        else if (phaseFlag == 2)
+        } else if (phaseFlag == 2) {
             phase = period / 2;
-        else if (phaseFlag == 3)
-            phase = period * (3/4);
+        } else if (phaseFlag == 3) {
+            phase = period * (3 / 4);
+        }
     }
 
     private void setThresholdFromFlag(byte thresholdFlag) {
-        if (thresholdFlag == 0)
+        if (thresholdFlag == 0) {
             threshold = period - 1;
-        else {
+        } else {
             int periodDividend = -3;
             periodDividend += (thresholdFlag - 1);
             threshold = (periodDividend / 8.0) * period;

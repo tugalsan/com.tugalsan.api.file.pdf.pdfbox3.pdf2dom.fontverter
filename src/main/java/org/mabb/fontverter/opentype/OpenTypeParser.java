@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.opentype;
 
 import org.mabb.fontverter.io.FontDataInput;
@@ -26,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 public class OpenTypeParser {
+
     private static final Logger log = LoggerFactory.getLogger(OpenTypeFont.class);
 
     private OpenTypeFont font;
@@ -54,8 +54,8 @@ public class OpenTypeParser {
         DataTypeBindingDeserializer deserializer = new DataTypeBindingDeserializer();
 
         for (int i = 0; i < font.sfntHeader.numTables; i++) {
-            OpenTypeTable.OtfTableRecord record =
-                    (OpenTypeTable.OtfTableRecord) deserializer.deserialize(input, OpenTypeTable.OtfTableRecord.class);
+            OpenTypeTable.OtfTableRecord record
+                    = (OpenTypeTable.OtfTableRecord) deserializer.deserialize(input, OpenTypeTable.OtfTableRecord.class);
 
             OpenTypeTable table = OpenTypeTable.createFromRecord(record, font);
             table.isFromParsedFont = true;

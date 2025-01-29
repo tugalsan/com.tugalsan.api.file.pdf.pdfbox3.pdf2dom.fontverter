@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.opentype.TtfInstructions.instructions.control;
 
 import org.mabb.fontverter.io.FontDataInputStream;
@@ -24,6 +23,7 @@ import org.mabb.fontverter.opentype.TtfInstructions.instructions.TtfInstruction;
 import java.io.IOException;
 
 public class PushBytes extends TtfInstruction {
+
     private int numBytes;
     private byte[] bytes;
 
@@ -33,14 +33,16 @@ public class PushBytes extends TtfInstruction {
 
     public void read(FontDataInputStream in) throws IOException {
         numBytes = code - 0xB0 + 1;
-        if (in.available() < numBytes)
+        if (in.available() < numBytes) {
             throw new IOException("Num PushBytes greater than available input stream data.");
+        }
 
         bytes = in.readBytes(numBytes);
     }
 
     public void execute(InstructionStack stack) throws IOException {
-        for (byte byteOn : bytes)
+        for (byte byteOn : bytes) {
             stack.push((int) byteOn & 0xFF);
+        }
     }
 }

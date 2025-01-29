@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.opentype.TtfInstructions;
 
 import org.mabb.fontverter.opentype.OpenTypeFont;
@@ -31,14 +30,15 @@ import java.util.Stack;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
- * This is our interpreter for TTF outline hint programs. Current purpose is for figuring
- * out and fixing older TTF fonts that don't render in some browsers correctly rather than
- * actual font rasterization
+ * This is our interpreter for TTF outline hint programs. Current purpose is for
+ * figuring out and fixing older TTF fonts that don't render in some browsers
+ * correctly rather than actual font rasterization
  * <p>
- * Currently can handle all stack and control operations but only like 15% of the graphics state
- * related instructions
+ * Currently can handle all stack and control operations but only like 15% of
+ * the graphics state related instructions
  */
 public class TtfVirtualMachine implements TtfInstructionVisitor {
+
     private static final Logger log = getLogger(TtfVirtualMachine.class);
 
     public int jumpOffset = 0;
@@ -89,21 +89,24 @@ public class TtfVirtualMachine implements TtfInstructionVisitor {
         graphicsState.initialize(font);
 
         // font == null for some lazy test code
-        if (font != null && font.getMxap() != null)
+        if (font != null && font.getMxap() != null) {
             storageArea = new Long[font.getMxap().getMaxStorage()];
+        }
     }
 
     private void executeFpgmInstructions() throws IOException {
         // FPGM(Font Program) table instructions must be executed only once before anything else
         // in the font get used
-        if (hasFpgmRun)
+        if (hasFpgmRun) {
             return;
+        }
 
         onFpgm = true;
         hasFpgmRun = true;
         // font == null for some lazy test code
-        if (font != null && font.getFpgmTable() != null)
+        if (font != null && font.getFpgmTable() != null) {
             execute(font.getFpgmTable().getInstructions());
+        }
 
         onFpgm = false;
     }
@@ -111,17 +114,19 @@ public class TtfVirtualMachine implements TtfInstructionVisitor {
     public void execute(TtfInstruction instruction) throws IOException {
         instruction.vm = this;
 
-        if (functionOn == null || instruction instanceof EndFunctionInstruction)
+        if (functionOn == null || instruction instanceof EndFunctionInstruction) {
             instruction.accept(this);
-        else
-            // since functions get their unique ID from the stack we must build the functions
-            // at run time rather then in the parse stage
+        } else // since functions get their unique ID from the stack we must build the functions
+        // at run time rather then in the parse stage
+        {
             functionOn.addInstruction(instruction);
+        }
     }
 
     public void visitGeneric(TtfInstruction instruction) throws IOException {
-        if (!shouldExecuteBranch())
+        if (!shouldExecuteBranch()) {
             return;
+        }
 
         instruction.execute(stack);
     }
@@ -137,8 +142,9 @@ public class TtfVirtualMachine implements TtfInstructionVisitor {
     }
 
     public void visit(ElseInstruction instruction) throws IOException {
-        if (ifStack.size() == 0)
+        if (ifStack.size() == 0) {
             throw new TtfVmRuntimeException("Else with no matching If!!");
+        }
 
         ifStack.peek().shouldExecute = !ifStack.peek().shouldExecute;
     }
@@ -149,8 +155,9 @@ public class TtfVirtualMachine implements TtfInstructionVisitor {
             return;
         }
 
-        if (ifStack.size() == 0)
+        if (ifStack.size() == 0) {
             throw new TtfVmRuntimeException("End If with no matching If!!");
+        }
 
         ifStack.pop();
     }
@@ -163,15 +170,17 @@ public class TtfVirtualMachine implements TtfInstructionVisitor {
     }
 
     public void visit(EndFunctionInstruction instruction) throws IOException {
-        if (functionOn == null)
+        if (functionOn == null) {
             throw new TtfVmRuntimeException("End function with no matching func def start!!");
+        }
 
         functionOn = null;
     }
 
     public boolean shouldExecuteBranch() {
-        if (ifStack.size() == 0)
+        if (ifStack.size() == 0) {
             return true;
+        }
 
         return ifStack.get(ifStack.size() - 1).shouldExecute;
     }
@@ -219,6 +228,7 @@ public class TtfVirtualMachine implements TtfInstructionVisitor {
     }
 
     public static class TtfVmRuntimeException extends IOException {
+
         public TtfVmRuntimeException(String message) {
             super(message);
         }

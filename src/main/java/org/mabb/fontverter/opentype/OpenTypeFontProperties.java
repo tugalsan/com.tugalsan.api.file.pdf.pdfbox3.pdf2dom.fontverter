@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.opentype;
 
 import org.apache.commons.lang3.StringUtils;
@@ -22,6 +21,7 @@ import org.mabb.fontverter.FontProperties;
 import org.mabb.fontverter.cff.CffFontAdapter;
 
 class OpenTypeFontProperties extends FontProperties {
+
     static OpenTypeFontProperties createFrom(OpenTypeFont font) {
         OpenTypeFontProperties properties = new OpenTypeFontProperties();
         if (font.isCffType()) {
@@ -45,8 +45,9 @@ class OpenTypeFontProperties extends FontProperties {
     private static void readNameTableNames(OpenTypeFont font, FontProperties properties) {
         // some ugly PDF ttf fonts have no name table.
         // possibley need to create ourselves from the composite font data
-        if (font.getNameTable() == null)
+        if (font.getNameTable() == null) {
             return;
+        }
 
         properties.setFullName(font.getNameTable().getName(OtfNameConstants.RecordType.FULL_FONT_NAME));
         properties.setName(font.getNameTable().getName(OtfNameConstants.RecordType.FULL_FONT_NAME));

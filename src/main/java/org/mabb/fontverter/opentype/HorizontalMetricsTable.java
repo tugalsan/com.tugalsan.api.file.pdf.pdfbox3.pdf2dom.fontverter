@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.opentype;
 
 import org.mabb.fontverter.cff.CffFontAdapter;
@@ -30,6 +29,7 @@ import java.util.List;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class HorizontalMetricsTable extends OpenTypeTable {
+
     private static final Logger log = getLogger(HorizontalMetricsTable.class);
     private int[] advanceWidths;
 
@@ -53,8 +53,9 @@ public class HorizontalMetricsTable extends OpenTypeTable {
         }
 
         LinkedList<Short> nonHorzBearings = new LinkedList<Short>();
-        while (reader.available() >= 2)
+        while (reader.available() >= 2) {
             nonHorzBearings.add(reader.readShort());
+        }
 
         nonHorizontalLeftSideBearing = nonHorzBearings.toArray(new Short[nonHorzBearings.size()]);
     }
@@ -66,8 +67,9 @@ public class HorizontalMetricsTable extends OpenTypeTable {
             writer.writeUnsignedShort(advanceWidths[i]);
             writer.writeShort(leftSideBearings[i]);
         }
-        for (Short bearingOn : nonHorizontalLeftSideBearing)
+        for (Short bearingOn : nonHorizontalLeftSideBearing) {
             writer.writeUnsignedShort(bearingOn);
+        }
 
         return writer.toByteArray();
     }
@@ -83,7 +85,6 @@ public class HorizontalMetricsTable extends OpenTypeTable {
         return table;
     }
 
-
     void normalize() throws IOException {
         if (advanceWidths == null) {
             leftSideBearings = new short[]{0};
@@ -96,8 +97,9 @@ public class HorizontalMetricsTable extends OpenTypeTable {
             List<CffGlyph> glyphs = cff.getGlyphs();
 
             // must start with the .notdef entry otherwise removed
-            if (glyphs.get(0).getLeftSideBearing() != 0)
+            if (glyphs.get(0).getLeftSideBearing() != 0) {
                 glyphs.add(0, cff.createGlyph());
+            }
 
             advanceWidths = new int[glyphs.size()];
             leftSideBearings = new short[glyphs.size()];
@@ -109,21 +111,25 @@ public class HorizontalMetricsTable extends OpenTypeTable {
             }
         }
 
-        if (font.getCmap() != null)
+        if (font.getCmap() != null) {
             loadMetrics();
+        }
     }
 
     private void loadMetrics() {
-        if (isFromParsedFont)
+        if (isFromParsedFont) {
             return;
+        }
 
         int lsbArrCount = font.getCmap().getGlyphCount() - advanceWidths.length;
         if (lsbArrCount > 0) {
             nonHorizontalLeftSideBearing = new Short[lsbArrCount];
-            for (int i = 0; i < lsbArrCount; i++)
+            for (int i = 0; i < lsbArrCount; i++) {
                 nonHorizontalLeftSideBearing[i] = 1;
-        } else
+            }
+        } else {
             nonHorizontalLeftSideBearing = new Short[]{};
+        }
     }
 
     public int[] getAdvanceWidths() {

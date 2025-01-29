@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.opentype;
 
 import org.mabb.fontverter.io.DataTypeBindingSerializer;
@@ -23,6 +22,7 @@ import org.mabb.fontverter.io.DataTypeProperty;
 import java.io.IOException;
 
 public class SfntHeader {
+
     public static final int SFNT_HEADER_SIZE = 12;
     public static final String CFF_FLAVOR = "OTTO";
     public static final String VERSION_1 = "\u0000\u0001\u0000\u0000";
@@ -53,8 +53,9 @@ public class SfntHeader {
 
     private int closestMaxPowerOfTwo(double number) {
         int powerOfTwo = 1;
-        while (powerOfTwo * 2 < number)
+        while (powerOfTwo * 2 < number) {
             powerOfTwo = powerOfTwo * 2;
+        }
 
         return powerOfTwo;
     }
@@ -71,12 +72,15 @@ public class SfntHeader {
     float openTypeVersion() {
         // string version consts are kludge for getting around data type version difference string vs fixed
         // so don't have to write extra data type annotation logic.
-        if (sfntFlavor.equals(CFF_FLAVOR))
+        if (sfntFlavor.equals(CFF_FLAVOR)) {
             return 3;
-        if (sfntFlavor.equals(VERSION_2))
+        }
+        if (sfntFlavor.equals(VERSION_2)) {
             return 2;
-        if (sfntFlavor.equals(VERSION_2_5))
+        }
+        if (sfntFlavor.equals(VERSION_2_5)) {
             return 2.5F;
+        }
 
         return 1;
     }

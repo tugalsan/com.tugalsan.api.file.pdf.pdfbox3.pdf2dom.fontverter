@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.woff;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -60,7 +59,6 @@ public class Woff2Font extends WoffFont {
 //
 //        return cachedCompressedBlock;
 //    }
-
     byte[] getRawData() throws IOException {
         byte[] bytes = super.getRawData();
         byte[] pad = FontVerterUtils.tablePaddingNeeded(bytes);
@@ -83,7 +81,6 @@ public class Woff2Font extends WoffFont {
 //
 //        return compressed;
 //    }
-
     public FontProperties getProperties() {
         FontProperties properties = new FontProperties();
         properties.setMimeType("application/font-woff2");
@@ -93,15 +90,18 @@ public class Woff2Font extends WoffFont {
     }
 
     public FontConverter createConverterForType(FontVerter.FontFormat fontFormat) throws FontNotSupportedException {
-        if (fontFormat == FontVerter.FontFormat.OTF)
+        if (fontFormat == FontVerter.FontFormat.OTF) {
             return new WoffToOtfConverter();
-        if (fontFormat == FontVerter.FontFormat.WOFF1)
+        }
+        if (fontFormat == FontVerter.FontFormat.WOFF1) {
             return new CombinedFontConverter(new WoffToOtfConverter(), new OtfToWoffConverter());
+        }
 
         throw new FontNotSupportedException("Font conversion not supported");
     }
 
     public static class Woff2Table extends WoffTable {
+
         private int transform = -1;
         protected String tag = "";
 
@@ -130,15 +130,17 @@ public class Woff2Font extends WoffFont {
 
             writer.writeUIntBase128(tableData.length);
 
-            if (isTableTransformed())
+            if (isTableTransformed()) {
                 writer.writeUIntBase128(getCompressedData().length);
+            }
 
             return writer.toByteArray();
         }
 
         public int getTransformedLength() throws IOException {
-            if (isTableTransformed())
+            if (isTableTransformed()) {
                 return getCompressedData().length;
+            }
             return tableData.length;
         }
 
@@ -147,21 +149,24 @@ public class Woff2Font extends WoffFont {
         }
 
         public int getTransform() {
-            if (transform == -1)
+            if (transform == -1) {
                 transform = initTransformValue();
+            }
 
             return transform;
         }
 
         private int initTransformValue() {
-            if (getFlag() == glyf || getFlag() == loca)
+            if (getFlag() == glyf || getFlag() == loca) {
                 return 3;
+            }
             return 0;
         }
 
         boolean isTableTransformed() {
-            if (getFlag() == WoffConstants.TableFlagType.glyf || getFlag() == loca)
+            if (getFlag() == WoffConstants.TableFlagType.glyf || getFlag() == loca) {
                 return transform != 3;
+            }
 
             return transform != 0;
         }

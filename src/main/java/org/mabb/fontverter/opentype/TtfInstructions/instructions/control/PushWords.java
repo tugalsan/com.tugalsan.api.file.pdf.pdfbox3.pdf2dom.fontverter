@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.opentype.TtfInstructions.instructions.control;
 
 import org.mabb.fontverter.io.FontDataInputStream;
@@ -24,6 +23,7 @@ import org.mabb.fontverter.opentype.TtfInstructions.instructions.TtfInstruction;
 import java.io.IOException;
 
 public class PushWords extends TtfInstruction {
+
     private short[] words;
 
     public int[] getCodeRanges() {
@@ -34,12 +34,14 @@ public class PushWords extends TtfInstruction {
         int numWords = code - 0xB8 + 1;
         words = new short[numWords];
 
-        for (int i = 0; i < numWords; i++)
+        for (int i = 0; i < numWords; i++) {
             words[i] = in.readShort();
+        }
     }
 
     public void execute(InstructionStack stack) throws IOException {
-        for (short wordOn : words)
+        for (short wordOn : words) {
             stack.push((int) wordOn);
+        }
     }
 }

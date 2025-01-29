@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.opentype.TtfInstructions;
 
 import org.mabb.fontverter.opentype.TtfInstructions.instructions.*;
@@ -27,6 +26,7 @@ import org.mabb.fontverter.opentype.TtfInstructions.instructions.control.Functio
 import java.io.IOException;
 
 public interface TtfInstructionVisitor {
+
     void visitGeneric(TtfInstruction instruction) throws IOException;
 
     void visit(IfInstruction instruction) throws IOException;

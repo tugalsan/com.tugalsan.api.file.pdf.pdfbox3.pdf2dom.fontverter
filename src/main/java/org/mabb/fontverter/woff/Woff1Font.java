@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.woff;
 
 import org.mabb.fontverter.*;
@@ -31,6 +30,7 @@ import java.util.zip.InflaterOutputStream;
 import static org.mabb.fontverter.woff.Woff1Font.Woff1Table.WOFF1_TABLE_DIRECTORY_ENTRY_SIZE;
 
 public class Woff1Font extends WoffFont {
+
     static final int WOFF1_HEADER_SIZE = 44;
 
     public WoffTable createTable() {
@@ -81,17 +81,19 @@ public class Woff1Font extends WoffFont {
         return properties;
     }
 
-
     public FontConverter createConverterForType(FontVerter.FontFormat fontFormat) throws FontNotSupportedException {
-        if (fontFormat == FontVerter.FontFormat.OTF)
+        if (fontFormat == FontVerter.FontFormat.OTF) {
             return new WoffToOtfConverter();
-        if (fontFormat == FontVerter.FontFormat.WOFF2)
+        }
+        if (fontFormat == FontVerter.FontFormat.WOFF2) {
             return new CombinedFontConverter(new WoffToOtfConverter(), new OtfToWoff2Converter());
+        }
 
         throw new FontNotSupportedException("Font conversion not supported");
     }
 
     public static class Woff1Table extends WoffTable {
+
         static final int WOFF1_TABLE_DIRECTORY_ENTRY_SIZE = 20;
         int offset;
         long checksum;

@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.opentype;
 
 import org.mabb.fontverter.io.FontDataInput;
@@ -29,6 +28,7 @@ import java.util.List;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class GlyphTable extends OpenTypeTable {
+
     private static final Logger log = getLogger(GlyphTable.class);
 
     List<TtfGlyph> glyphs = new LinkedList<TtfGlyph>();
@@ -40,8 +40,9 @@ public class GlyphTable extends OpenTypeTable {
     protected byte[] generateUnpaddedData() throws IOException {
         FontDataOutputStream out = new FontDataOutputStream();
         for (TtfGlyph glyphOn : glyphs) {
-            if (!glyphOn.isEmpty())
+            if (!glyphOn.isEmpty()) {
                 out.write(glyphOn.generateData());
+            }
         }
 
         return out.toByteArray();
@@ -86,9 +87,11 @@ public class GlyphTable extends OpenTypeTable {
     public List<TtfGlyph> getNonEmptyGlyphs() {
         List<TtfGlyph> nonEmpty = new LinkedList<TtfGlyph>();
 
-        for (TtfGlyph glyphOn : glyphs)
-            if (!glyphOn.isEmpty())
+        for (TtfGlyph glyphOn : glyphs) {
+            if (!glyphOn.isEmpty()) {
                 nonEmpty.add(glyphOn);
+            }
+        }
 
         return nonEmpty;
     }

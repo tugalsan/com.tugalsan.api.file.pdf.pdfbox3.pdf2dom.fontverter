@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.opentype.TtfInstructions;
 
 import org.mabb.fontverter.opentype.ControlValueTable;
@@ -28,6 +27,7 @@ import java.util.List;
 import static org.mabb.fontverter.opentype.TtfInstructions.TtfGraphicsState.ScanConverterMode.DROPOUT_WITH_STUBS;
 
 public class TtfGraphicsState {
+
     public RoundSettings.RoundState roundState = RoundSettings.RoundState.ROUND;
     public RoundSettings roundSettings = new RoundSettings();
     public Long angleWeight = 0L;
@@ -55,26 +55,27 @@ public class TtfGraphicsState {
     public Long zone1Id = 0L;
     public Long zone2Id = 0L;
 
-
     public void initialize(OpenTypeFont font) {
         // since cvt values are changed by instructions and we don't want to write to the actual font
         // we make a copy before execution
         // font == null from lazy unit test code
-        if (font != null && font.getCvt() != null)
+        if (font != null && font.getCvt() != null) {
             cvtValues = new ArrayList<Short>(font.getCvt().getValues());
+        }
     }
 
-
     public Short getCvtValue(Long index) throws ControlValueTable.CvtValueNotFoundException {
-        if (index > cvtValues.size())
+        if (index > cvtValues.size()) {
             throw new ControlValueTable.CvtValueNotFoundException();
+        }
 
         return cvtValues.get(index.intValue());
     }
 
     public void setCvtValue(Long index, Long number) throws ControlValueTable.CvtValueNotFoundException {
-        if (index > cvtValues.size())
+        if (index > cvtValues.size()) {
             throw new ControlValueTable.CvtValueNotFoundException();
+        }
 
         cvtValues.set(index.intValue(), number.shortValue());
     }
@@ -109,9 +110,11 @@ public class TtfGraphicsState {
         }
 
         public static ScanConverterMode fromValue(int code) {
-            for (ScanConverterMode val : ScanConverterMode.values())
-                if (val.id == code)
+            for (ScanConverterMode val : ScanConverterMode.values()) {
+                if (val.id == code) {
                     return val;
+                }
+            }
             return DROPOUT_WITH_STUBS;
         }
     }

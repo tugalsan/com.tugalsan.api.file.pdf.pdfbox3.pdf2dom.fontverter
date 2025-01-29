@@ -14,13 +14,13 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.io;
 
 import java.io.DataInput;
 import java.io.IOException;
 
 public interface FontDataInput extends DataInput {
+
     long readUnsignedInt() throws IOException;
 
     String readString(int length) throws IOException;

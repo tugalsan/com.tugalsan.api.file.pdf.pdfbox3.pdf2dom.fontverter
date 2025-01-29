@@ -14,9 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.opentype;
-
 
 import org.mabb.fontverter.io.FontDataInput;
 import org.mabb.fontverter.opentype.GlyphMapReader.GlyphMapping;
@@ -34,6 +32,7 @@ import static org.mabb.fontverter.opentype.CmapSubTable.*;
 import static org.mabb.fontverter.opentype.CmapSubTable.CMAP_RECORD_BYTE_SIZE;
 
 public class CmapTable extends OpenTypeTable {
+
     private static Logger log = LoggerFactory.getLogger(CmapTable.class);
     private static final int CMAP_HEADER_SIZE = 4;
     private Format4SubTable windowsTable;
@@ -65,8 +64,9 @@ public class CmapTable extends OpenTypeTable {
             writer.write(tableOn.getRecordData());
         }
 
-        for (CmapSubTable tableOn : subTables)
+        for (CmapSubTable tableOn : subTables) {
             writer.write(tableOn.getData());
+        }
 
         return writer.toByteArray();
     }
@@ -91,27 +91,29 @@ public class CmapTable extends OpenTypeTable {
             input.seek((int) header.offset);
 
             int format = input.readUnsignedShort();
-            if (format == 0)
+            if (format == 0) {
                 subTable = new Format0SubTable();
-            else if (format == 2)
+            } else if (format == 2) {
                 subTable = new Format2SubTable();
-            else if (format == 4)
+            } else if (format == 4) {
                 subTable = new Format4SubTable();
-            else if (format == 6)
+            } else if (format == 6) {
                 subTable = new Format6SubTable();
-            else if (format == 8)
+            } else if (format == 8) {
                 subTable = new Format8SubTable();
-            else if (format == 10)
+            } else if (format == 10) {
                 subTable = new Format10SubTable();
-            else if (format == 12)
+            } else if (format == 12) {
                 subTable = new Format12SubTable();
-            else if (format == 13)
+            } else if (format == 13) {
                 subTable = new Format13SubTable();
-            else if (format == 14)
+            } else if (format == 14) {
                 subTable = new Format14SubTable();
+            }
 
-            if (subTable == null)
+            if (subTable == null) {
                 continue;
+            }
 
             subTable.readData(input);
             subTable.setEncodingId(header.encodingID);
@@ -121,6 +123,7 @@ public class CmapTable extends OpenTypeTable {
     }
 
     static class SubTableHeader {
+
         int platformID;
         int encodingID;
         long offset;
@@ -154,37 +157,46 @@ public class CmapTable extends OpenTypeTable {
     }
 
     public void addGlyphMapping(List<GlyphMapping> mapping) {
-        for (GlyphMapping mappingOn : mapping)
+        for (GlyphMapping mappingOn : mapping) {
             addGlyphMapping(mappingOn.charCode, mappingOn.glyphId);
+        }
     }
 
     public int getGlyphCount() {
-        if (subTables.size() == 0)
+        if (subTables.size() == 0) {
             return 0;
+        }
         // kludge to skip blind parsed subtables and should go off glyf/loca table anyway at least for ttf for maxp size?
-        for (CmapSubTable subTableOn : subTables)
-            if (subTableOn.glyphCount() != 0)
+        for (CmapSubTable subTableOn : subTables) {
+            if (subTableOn.glyphCount() != 0) {
                 return subTableOn.glyphCount();
+            }
+        }
 
         return 0;
     }
 
     public OtfEncodingType getCmapEncodingType() {
         // kludge to skip blind parsed subtables and should go off glyf/loca table anyway at least for ttf for maxp size?
-        for (CmapSubTable subTableOn : subTables)
-            if (subTableOn.getPlatformId() == OtfNameConstants.WINDOWS_PLATFORM_ID)
+        for (CmapSubTable subTableOn : subTables) {
+            if (subTableOn.getPlatformId() == OtfNameConstants.WINDOWS_PLATFORM_ID) {
                 return subTableOn.getEncodingType();
+            }
+        }
 
         return OtfEncodingType.Unicode_BMP;
     }
 
     public List<GlyphMapping> getGlyphMappings() {
-        if (subTables.size() == 0)
+        if (subTables.size() == 0) {
             return new ArrayList<GlyphMapping>();
+        }
         // kludge to skip blind parsed subtables and not having a abstract glyph mapping thing above the sub tables
-        for (CmapSubTable subTableOn : subTables)
-            if (subTableOn.glyphCount() != 0)
+        for (CmapSubTable subTableOn : subTables) {
+            if (subTableOn.glyphCount() != 0) {
                 return subTableOn.getGlyphMappings();
+            }
+        }
 
         return subTables.get(0).getGlyphMappings();
     }

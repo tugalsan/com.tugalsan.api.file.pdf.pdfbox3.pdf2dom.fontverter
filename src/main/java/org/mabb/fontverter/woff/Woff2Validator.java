@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.woff;
 
 import org.mabb.fontverter.opentype.OpenTypeFont;
@@ -25,34 +24,40 @@ import org.mabb.fontverter.validator.ValidateRule;
 import java.io.IOException;
 
 public class Woff2Validator extends RuleValidator<Woff2Font> {
+
     public Woff2Validator() {
         addRuleDefinition(new HeaderRules());
     }
 
     public static class HeaderRules {
+
         @ValidateRule(message = "Reported total sfnt size not equal to calculated size")
         public String totalSfntSize(Woff2Font font) throws IOException {
             OpenTypeFont otfFOnt = ((OpenTypeFont) font.getFonts().get(0));
             int reportedTotal = otfFOnt.getData().length;
             int total = 12 + (font.getTables().size() * 16);
 
-            for (WoffTable tableOn : font.getTables())
+            for (WoffTable tableOn : font.getTables()) {
                 total += round4(tableOn.originalLength);
-            if (reportedTotal != total)
+            }
+            if (reportedTotal != total) {
                 return String.format("reported: %d != calc: %d", reportedTotal, total);
+            }
             return "";
         }
 
         private int round4(int num) {
-            if (num % 4 == 0)
+            if (num % 4 == 0) {
                 return num;
+            }
             return num + (4 - (num % 4));
         }
 
         @ValidateRule(message = "Header is not correct size")
         public String headerBytesCorrectSize(Woff2Font font) throws IOException {
-            if (font.header.getData().length != 48)
+            if (font.header.getData().length != 48) {
                 return String.format("%d != 48", font.header.getData().length);
+            }
             return "";
         }
     }

@@ -14,12 +14,12 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FontVerter. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.mabb.fontverter.opentype;
 
 import org.mabb.fontverter.io.DataTypeProperty;
 
 public class MaximumProfileTable extends OpenTypeTable {
+
     @DataTypeProperty(dataType = DataTypeProperty.DataType.FIXED32)
     protected float version;
 
