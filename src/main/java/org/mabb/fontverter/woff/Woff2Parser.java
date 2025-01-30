@@ -92,7 +92,7 @@ public class Woff2Parser extends WoffParser {
                 tableOn.tableData = Arrays.copyOfRange(block, offset, end);
                 offset += tableOn.transformLength;
             } catch (Exception e) {
-                TGS_UnSafe.throwIfInterruptedException(ex);
+                TGS_UnSafe.throwIfInterruptedException(e);
                 return;
             }
         }

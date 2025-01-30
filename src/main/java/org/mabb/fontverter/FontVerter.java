@@ -119,7 +119,7 @@ public class FontVerter {
                     return adapter;
                 }
             } catch (Exception ex) {
-                TGS_UnSafe.throwIfInterruptedException(e);
+                TGS_UnSafe.throwIfInterruptedException(ex);
                 throw new IOException("FontVerter could not read the given font file.", ex);
             }
         }
