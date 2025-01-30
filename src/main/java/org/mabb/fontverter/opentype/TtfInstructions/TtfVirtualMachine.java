@@ -16,6 +16,7 @@
  */
 package org.mabb.fontverter.opentype.TtfInstructions;
 
+import com.tugalsan.api.unsafe.client.TGS_UnSafe;
 import org.mabb.fontverter.opentype.OpenTypeFont;
 import org.mabb.fontverter.opentype.TtfInstructions.instructions.TtfInstruction;
 import org.mabb.fontverter.opentype.TtfInstructions.instructions.control.*;
@@ -72,6 +73,7 @@ public class TtfVirtualMachine implements TtfInstructionVisitor {
             try {
                 execute(instructionOn);
             } catch (Exception ex) {
+                TGS_UnSafe.throwIfInterruptedException(ex);
                 throw new TtfVmRuntimeException(String.format("Error on instruction #%d type: %s Message: %s",
                         i, instructionOn.toString(), ex.getMessage()), ex);
             }

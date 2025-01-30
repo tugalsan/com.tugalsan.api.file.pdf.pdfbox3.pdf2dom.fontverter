@@ -16,6 +16,7 @@
  */
 package org.mabb.fontverter.woff;
 
+import com.tugalsan.api.unsafe.client.TGS_UnSafe;
 import org.mabb.fontverter.woff.Woff2Font.Woff2Table;
 import org.mabb.fontverter.woff.WoffConstants.TableFlagType;
 //import org.meteogroup.jbrotli.BrotliDeCompressor;
@@ -91,6 +92,7 @@ public class Woff2Parser extends WoffParser {
                 tableOn.tableData = Arrays.copyOfRange(block, offset, end);
                 offset += tableOn.transformLength;
             } catch (Exception e) {
+                TGS_UnSafe.throwIfInterruptedException(ex);
                 return;
             }
         }

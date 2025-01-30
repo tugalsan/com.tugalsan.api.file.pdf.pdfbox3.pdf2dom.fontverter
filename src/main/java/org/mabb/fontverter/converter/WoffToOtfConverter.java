@@ -16,6 +16,7 @@
  */
 package org.mabb.fontverter.converter;
 
+import com.tugalsan.api.unsafe.client.TGS_UnSafe;
 import org.apache.commons.lang3.StringUtils;
 import org.mabb.fontverter.FVFont;
 import org.mabb.fontverter.opentype.OpenTypeFont;
@@ -37,6 +38,7 @@ public class WoffToOtfConverter implements FontConverter {
         try {
             readTables();
         } catch (Exception e) {
+            TGS_UnSafe.throwIfInterruptedException(e);
             throw new IOException(e);
         }
         otfFont.finalizeFont();

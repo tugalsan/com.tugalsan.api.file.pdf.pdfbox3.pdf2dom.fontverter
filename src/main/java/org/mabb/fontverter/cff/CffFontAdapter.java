@@ -16,8 +16,7 @@
  */
 package org.mabb.fontverter.cff;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import com.tugalsan.api.unsafe.client.TGS_UnSafe;
 import org.apache.fontbox.EncodedFont;
 import org.apache.fontbox.cff.*;
 import org.apache.fontbox.encoding.Encoding;
@@ -37,7 +36,6 @@ public class CffFontAdapter implements FVFont {
 
     private byte[] data = new byte[]{};
     private CFFFont font;
-    private static final Log LOG = LogFactory.getLog(CffFontAdapter.class);
 
     public static CffFontAdapter parse(byte[] cffData) throws IOException {
         CFFFont cfffont = fontboxParse(cffData);
@@ -70,6 +68,7 @@ public class CffFontAdapter implements FVFont {
             fontboxParse(fontFile);
             return true;
         } catch (Exception e) {
+            TGS_UnSafe.throwIfInterruptedException(e);
             return false;
         }
     }
@@ -184,8 +183,9 @@ public class CffFontAdapter implements FVFont {
             // reflection to get private map field for lazyness, !fragile!, obviously
             Field mapField = FontVerterUtils.findPrivateField("gidToName", CFFCharset.class);
             return (Map<Integer, String>) mapField.get(font.getCharset());
-        } catch (Exception ex) {
-            throw new IOException(ex);
+        } catch (Exception e) {
+            TGS_UnSafe.throwIfInterruptedException(e);
+            throw new IOException(e);
         }
     }
 
@@ -194,8 +194,9 @@ public class CffFontAdapter implements FVFont {
         try {
             Field mapField = FontVerterUtils.findPrivateField("sidOrCidToGid", CFFCharset.class);
             return (Map<Integer, Integer>) mapField.get(font.getCharset());
-        } catch (Exception ex) {
-            throw new IOException(ex);
+        } catch (Exception e) {
+            TGS_UnSafe.throwIfInterruptedException(e);
+            throw new IOException(e);
         }
     }
 

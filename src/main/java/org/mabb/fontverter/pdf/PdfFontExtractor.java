@@ -16,6 +16,7 @@
  */
 package org.mabb.fontverter.pdf;
 
+import com.tugalsan.api.unsafe.client.TGS_UnSafe;
 import org.apache.commons.io.FileUtils;
 import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -225,6 +226,7 @@ public class PdfFontExtractor extends PDFTextStripper {
         try {
             return converter.convert(font);
         } catch (Exception ex) {
+            TGS_UnSafe.throwIfInterruptedException(ex);
             throw new IOException(ex);
         }
     }

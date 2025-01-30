@@ -16,6 +16,7 @@
  */
 package org.mabb.fontverter.opentype;
 
+import com.tugalsan.api.unsafe.client.TGS_UnSafe;
 import org.mabb.fontverter.io.FontDataInput;
 import org.mabb.fontverter.io.FontDataInputStream;
 import org.mabb.fontverter.io.FontDataOutputStream;
@@ -75,6 +76,7 @@ public class GlyphTable extends OpenTypeTable {
                 TtfGlyph glyph = TtfGlyph.parse(glyphData, font);
                 glyphs.add(glyph);
             } catch (Exception ex) {
+                TGS_UnSafe.throwIfInterruptedException(ex);
                 ex.printStackTrace();
             }
         }

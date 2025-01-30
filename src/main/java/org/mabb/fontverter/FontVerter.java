@@ -16,6 +16,7 @@
  */
 package org.mabb.fontverter;
 
+import com.tugalsan.api.unsafe.client.TGS_UnSafe;
 import org.apache.commons.io.FileUtils;
 import org.mabb.fontverter.converter.FontConverter;
 import org.reflections.Reflections;
@@ -118,6 +119,7 @@ public class FontVerter {
                     return adapter;
                 }
             } catch (Exception ex) {
+                TGS_UnSafe.throwIfInterruptedException(e);
                 throw new IOException("FontVerter could not read the given font file.", ex);
             }
         }
@@ -129,6 +131,7 @@ public class FontVerter {
         try {
             return parseFont(fontData, adapterOn);
         } catch (Exception e) {
+            TGS_UnSafe.throwIfInterruptedException(e);
             throw new IOException(e);
         }
     }

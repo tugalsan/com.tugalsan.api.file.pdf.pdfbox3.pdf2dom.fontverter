@@ -16,6 +16,7 @@
  */
 package org.mabb.fontverter.opentype;
 
+import com.tugalsan.api.unsafe.client.TGS_UnSafe;
 import org.apache.commons.lang3.StringUtils;
 import org.mabb.fontverter.FontVerterUtils;
 import org.mabb.fontverter.io.*;
@@ -391,6 +392,7 @@ public class TtfGlyph {
 
             return parser.parse(FontVerterUtils.toPrimative(instructions));
         } catch (Exception ex) {
+            TGS_UnSafe.throwIfInterruptedException(ex);
             log.info("Failed to parse ttfinstrctuins, currentley uneeded for conversion");
 
             return new ArrayList<TtfInstruction>();
