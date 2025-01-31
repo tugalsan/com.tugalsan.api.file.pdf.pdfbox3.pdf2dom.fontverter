@@ -276,7 +276,6 @@ public class CffFontAdapter implements FVFont {
             glyph.charStr = result.charStr();
             glyphs.add(glyph);
         }
-
         return glyphs;
     }
 
