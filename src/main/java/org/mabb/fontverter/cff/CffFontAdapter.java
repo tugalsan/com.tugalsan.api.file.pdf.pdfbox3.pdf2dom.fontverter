@@ -268,12 +268,12 @@ public class CffFontAdapter implements FVFont {
         for (GlyphMapReader.GlyphMapping mapOn : getGlyphMaps()) {
             CffGlyph glyph = createGlyph();
 //            Type2CharString charStr = font.getType2CharString(mapOn.glyphId);
-            var tuple = CffFontPatchUtils.getType2CharString(font, mapOn.glyphId);
+            var result = CffFontPatchUtils.getType2CharString(font, mapOn.glyphId);
 //            glyph.readType2Sequence(charStr.getType2Sequence());
-            glyph.readType2Sequence(tuple.value1);
+            glyph.readType2Sequence(result.type2Sequence());
             glyph.map = mapOn;
 //            glyph.charStr = charStr;
-            glyph.charStr = tuple.value0;
+            glyph.charStr = result.charStr();
             glyphs.add(glyph);
         }
 

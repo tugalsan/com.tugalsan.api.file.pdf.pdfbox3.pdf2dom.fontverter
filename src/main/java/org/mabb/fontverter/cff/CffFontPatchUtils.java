@@ -1,6 +1,5 @@
 package org.mabb.fontverter.cff;
 
-import com.tugalsan.api.tuple.client.TGS_Tuple2;
 import com.tugalsan.api.unsafe.client.TGS_UnSafe;
 import java.util.List;
 import java.util.Locale;
@@ -15,7 +14,14 @@ import org.apache.fontbox.type1.Type1CharStringReader;
 
 public class CffFontPatchUtils {
 
-    public static TGS_Tuple2<Type2CharString, List<Object>> getType2CharString(CFFFont font, int cidOrGid) {
+    public static record Result(Type2CharString charStr, List<Object> type2Sequence) {
+
+        public static Result of(Type2CharString charStr, List<Object> type2Sequence) {
+            return new Result(charStr, type2Sequence);
+        }
+    }
+
+    public static Result getType2CharString(CFFFont font, int cidOrGid) {
         if (font instanceof CFFType1Font _font) {
             return CFFType1Font_getType2CharString(_font, cidOrGid);
         }
@@ -25,15 +31,14 @@ public class CffFontPatchUtils {
         return null;
     }
 
-    private static TGS_Tuple2<Type2CharString, List<Object>> CFFType1Font_getType2CharString(CFFType1Font font, int gid) {
+    private static Result CFFType1Font_getType2CharString(CFFType1Font font, int gid) {
         String name = "GID+" + gid; // for debugging only
         return CFFType1Font_getType2CharString(font, gid, name);
     }
 
     // Returns the Type 2 charstring for the given GID, with name for debugging
-    private static TGS_Tuple2<Type2CharString, List<Object>> CFFType1Font_getType2CharString(CFFType1Font font, int gid, String name) {
+    private static Result CFFType1Font_getType2CharString(CFFType1Font font, int gid, String name) {
         return TGS_UnSafe.call(() -> {
-
             var field_charStringCache = font.getClass().getDeclaredField("charStringCache");
             field_charStringCache.setAccessible(true);
             var charStringCache = (Map<Integer, Type2CharString>) field_charStringCache.get("charStringCache");
@@ -83,11 +88,11 @@ public class CffFontPatchUtils {
                 type2 = new Type2CharString(reader, font.getName(), name, gid, type2seq, getDefaultWidthX, getNominalWidthX);
                 charStringCache.put(gid, type2);
             }
-            return TGS_Tuple2.of(type2, type2seq);
+            return Result.of(type2, type2seq);
         });
     }
 
-    private static TGS_Tuple2<Type2CharString, List<Object>> CFFCIDFont_getType2CharString(CFFCIDFont font, int cid) {
+    private static Result CFFCIDFont_getType2CharString(CFFCIDFont font, int cid) {
         return TGS_UnSafe.call(() -> {
             var field_charStringCache = font.getClass().getDeclaredField("charStringCache");
             field_charStringCache.setAccessible(true);
@@ -139,7 +144,7 @@ public class CffFontPatchUtils {
                 type2 = new CIDKeyedType2CharString(reader, font.getName(), cid, gid, type2seq, getDefaultWidthX, getNominalWidthX);
                 charStringCache.put(cid, type2);
             }
-            return TGS_Tuple2.of(type2, type2seq);
+            return Result.of(type2, type2seq);
         });
     }
 }
