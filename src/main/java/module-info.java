@@ -8,4 +8,6 @@ module com.tugalsan.api.file.pdf.pdfbox3.pdf2dom.fontverter {
     requires org.apache.fontbox;
     requires org.apache.pdfbox;
     requires com.tugalsan.api.unsafe;
+    exports org.mabb.fontverter;
+    exports org.mabb.fontverter.pdf;
 }
