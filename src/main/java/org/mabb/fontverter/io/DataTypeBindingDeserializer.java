@@ -16,7 +16,7 @@
  */
 package org.mabb.fontverter.io;
 
-import com.tugalsan.api.unsafe.client.TGS_UnSafe;
+import com.tugalsan.api.function.client.TGS_FuncUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +45,7 @@ public class DataTypeBindingDeserializer {
         try {
             return deserialize(dataInput, toClass.newInstance());
         } catch (Exception ex) {
-            TGS_UnSafe.throwIfInterruptedException(ex);
+            TGS_FuncUtils.throwIfInterruptedException(ex);
             throw new DataTypeSerializerException(ex);
         }
     }
@@ -65,14 +65,14 @@ public class DataTypeBindingDeserializer {
                 try {
                     deserializeProperty(propertyOn, toObj);
                 } catch (Exception ex) {
-                    TGS_UnSafe.throwIfInterruptedException(ex);
+                    TGS_FuncUtils.throwIfInterruptedException(ex);
                     throw new DataTypeSerializerException(propertyOn.toString() + " " + toObj.getClass().getCanonicalName(), ex);
                 }
             }
 
             return toObj;
         } catch (Exception ex) {
-            TGS_UnSafe.throwIfInterruptedException(ex);
+            TGS_FuncUtils.throwIfInterruptedException(ex);
             throw new DataTypeSerializerException(toObj.getClass().getCanonicalName(), ex);
         }
     }
@@ -154,7 +154,7 @@ public class DataTypeBindingDeserializer {
             try {
                 array[i] = readSingleValue(binding);
             } catch (Exception ex) {
-                TGS_UnSafe.throwIfInterruptedException(ex);
+                TGS_FuncUtils.throwIfInterruptedException(ex);
                 String message = String.format("Array length ran over input data length."
                         + " Index on: %d Array Length: %d", i, arrayLength);
 

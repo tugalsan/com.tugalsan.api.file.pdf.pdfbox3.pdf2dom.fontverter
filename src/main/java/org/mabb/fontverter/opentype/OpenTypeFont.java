@@ -16,7 +16,7 @@
  */
 package org.mabb.fontverter.opentype;
 
-import com.tugalsan.api.unsafe.client.TGS_UnSafe;
+import com.tugalsan.api.function.client.TGS_FuncUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mabb.fontverter.*;
 import org.mabb.fontverter.converter.*;
@@ -105,7 +105,7 @@ public class OpenTypeFont implements FVFont {
         try {
             new OpenTypeParser().parse(fontFile, this);
         } catch (Exception e) {
-            TGS_UnSafe.throwIfInterruptedException(e);
+            TGS_FuncUtils.throwIfInterruptedException(e);
             throw new IOException(e);
         }
     }
@@ -129,7 +129,7 @@ public class OpenTypeFont implements FVFont {
             OpenTypeValidator validator = new OpenTypeValidator();
             return validator.validate(this);
         } catch (Exception ex) {
-            TGS_UnSafe.throwIfInterruptedException(ex);
+            TGS_FuncUtils.throwIfInterruptedException(ex);
             ex.printStackTrace();
             RuleValidator.FontValidatorError error = new RuleValidator.FontValidatorError(RuleValidator.ValidatorErrorType.ERROR,
                     String.format("Exception running validator: %s %s", ex.getMessage(), ex.getClass()));

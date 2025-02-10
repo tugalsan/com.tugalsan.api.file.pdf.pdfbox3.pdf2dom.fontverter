@@ -16,7 +16,7 @@
  */
 package org.mabb.fontverter.io;
 
-import com.tugalsan.api.unsafe.client.TGS_UnSafe;
+import com.tugalsan.api.function.client.TGS_FuncUtils;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
@@ -40,7 +40,7 @@ public class DataTypeBindingSerializer {
             try {
                 serializeProperty(object, propertyOn);
             } catch (Exception e) {
-                TGS_UnSafe.throwIfInterruptedException(e);
+                TGS_FuncUtils.throwIfInterruptedException(e);
                 throw new DataTypeSerializerException("Error serializing property: " + propertyOn.toString(), e);
             }
         }

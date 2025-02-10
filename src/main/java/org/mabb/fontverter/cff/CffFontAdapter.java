@@ -16,7 +16,7 @@
  */
 package org.mabb.fontverter.cff;
 
-import com.tugalsan.api.unsafe.client.TGS_UnSafe;
+import com.tugalsan.api.function.client.TGS_FuncUtils;
 import org.apache.fontbox.EncodedFont;
 import org.apache.fontbox.cff.*;
 import org.apache.fontbox.encoding.Encoding;
@@ -68,7 +68,7 @@ public class CffFontAdapter implements FVFont {
             fontboxParse(fontFile);
             return true;
         } catch (Exception e) {
-            TGS_UnSafe.throwIfInterruptedException(e);
+            TGS_FuncUtils.throwIfInterruptedException(e);
             return false;
         }
     }
@@ -184,7 +184,7 @@ public class CffFontAdapter implements FVFont {
             Field mapField = FontVerterUtils.findPrivateField("gidToName", CFFCharset.class);
             return (Map<Integer, String>) mapField.get(font.getCharset());
         } catch (Exception e) {
-            TGS_UnSafe.throwIfInterruptedException(e);
+            TGS_FuncUtils.throwIfInterruptedException(e);
             throw new IOException(e);
         }
     }
@@ -195,7 +195,7 @@ public class CffFontAdapter implements FVFont {
             Field mapField = FontVerterUtils.findPrivateField("sidOrCidToGid", CFFCharset.class);
             return (Map<Integer, Integer>) mapField.get(font.getCharset());
         } catch (Exception e) {
-            TGS_UnSafe.throwIfInterruptedException(e);
+            TGS_FuncUtils.throwIfInterruptedException(e);
             throw new IOException(e);
         }
     }

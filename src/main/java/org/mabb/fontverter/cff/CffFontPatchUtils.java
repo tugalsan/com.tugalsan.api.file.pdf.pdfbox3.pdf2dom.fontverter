@@ -1,6 +1,6 @@
 package org.mabb.fontverter.cff;
 
-import com.tugalsan.api.unsafe.client.TGS_UnSafe;
+import com.tugalsan.api.function.client.maythrow.checkedexceptions.TGS_FuncMTCEUtils;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -38,7 +38,7 @@ public class CffFontPatchUtils {
 
     // Returns the Type 2 charstring for the given GID, with name for debugging
     private static Result CFFType1Font_getType2CharString(CFFType1Font font, int gid, String name) {
-        return TGS_UnSafe.call(() -> {
+        return TGS_FuncMTCEUtils.call(() -> {
             var field_charStringCache = font.getClass().getDeclaredField("charStringCache");
             field_charStringCache.setAccessible(true);
             var charStringCache = (Map<Integer, Type2CharString>) field_charStringCache.get("charStringCache");
@@ -93,7 +93,7 @@ public class CffFontPatchUtils {
     }
 
     private static Result CFFCIDFont_getType2CharString(CFFCIDFont font, int cid) {
-        return TGS_UnSafe.call(() -> {
+        return TGS_FuncMTCEUtils.call(() -> {
             var field_charStringCache = font.getClass().getDeclaredField("charStringCache");
             field_charStringCache.setAccessible(true);
             var charStringCache = (Map<Integer, CIDKeyedType2CharString>) field_charStringCache.get("charStringCache");
