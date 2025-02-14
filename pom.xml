@@ -131,12 +131,12 @@
         </dependency>
 
         
-        <!-- https://mvnrepository.com/artifact/com.google.guava/guava-primitives -->
         <dependency>
             <groupId>com.google.guava</groupId>
-            <artifactId>guava-primitives</artifactId>
-            <version>r03</version>
+            <artifactId>guava</artifactId>
+            <version>33.4.0-jre</version>
         </dependency>
+
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>com.tugalsan.api.function</artifactId>
