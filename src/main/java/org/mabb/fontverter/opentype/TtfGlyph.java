@@ -24,8 +24,7 @@ import org.mabb.fontverter.opentype.TtfInstructions.instructions.TtfInstruction;
 import org.mabb.fontverter.opentype.TtfInstructions.TtfInstructionParser;
 import org.slf4j.Logger;
 
-import java.awt.geom.Path2D;
-import java.awt.geom.Point2D;
+import module java.desktop;
 import java.io.EOFException;
 import java.io.IOException;
 import java.util.ArrayList;

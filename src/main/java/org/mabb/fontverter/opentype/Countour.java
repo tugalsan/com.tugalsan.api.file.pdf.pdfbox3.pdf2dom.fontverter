@@ -16,7 +16,7 @@
  */
 package org.mabb.fontverter.opentype;
 
-import java.awt.geom.Point2D;
+import module java.desktop;
 import java.util.LinkedList;
 
 public class Countour extends LinkedList<Point2D.Double> {

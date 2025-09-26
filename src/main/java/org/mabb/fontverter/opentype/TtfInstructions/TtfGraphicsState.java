@@ -20,7 +20,7 @@ import org.mabb.fontverter.opentype.ControlValueTable;
 import org.mabb.fontverter.opentype.OpenTypeFont;
 import org.mabb.fontverter.opentype.TtfInstructions.graphicsengine.RoundSettings;
 
-import java.awt.geom.Point2D;
+import module java.desktop;
 import java.util.ArrayList;
 import java.util.List;
 

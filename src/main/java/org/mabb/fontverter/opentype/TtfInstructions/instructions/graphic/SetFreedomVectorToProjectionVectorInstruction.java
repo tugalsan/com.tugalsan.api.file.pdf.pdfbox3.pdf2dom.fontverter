@@ -20,18 +20,21 @@ import org.mabb.fontverter.io.FontDataInputStream;
 import org.mabb.fontverter.opentype.TtfInstructions.InstructionStack;
 import org.mabb.fontverter.opentype.TtfInstructions.instructions.TtfInstruction;
 
-import java.awt.geom.Point2D;
-import java.io.IOException;
+import module java.desktop;
+import java.io.*;
 
 public class SetFreedomVectorToProjectionVectorInstruction extends TtfInstruction {
 
+    @Override
     public int[] getCodeRanges() {
         return new int[]{0x0E};
     }
 
+    @Override
     public void read(FontDataInputStream in) throws IOException {
     }
 
+    @Override
     public void execute(InstructionStack stack) throws IOException {
         vm.getGraphicsState().freedomVector = (Point2D.Double) vm.getGraphicsState().projectionVector.clone();
     }
